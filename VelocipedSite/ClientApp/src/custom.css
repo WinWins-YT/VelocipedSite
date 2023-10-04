@@ -16,3 +16,20 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.shopBannerContainer {
+  width: 300px;
+  height: 300px;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.shopBanner {
+  border-radius: 20px;
+  position: relative;
+  vertical-align: center;
+  width: 300px;
+  top: 0;
+  transition: top ease-out 0.5s;
+  margin: 10px 0 0 0;
+}
