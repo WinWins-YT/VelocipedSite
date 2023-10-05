@@ -29,6 +29,7 @@ code {
   position: relative;
   vertical-align: center;
   width: 300px;
+  height: auto;
   top: 0;
   transition: top ease-out 0.5s;
   margin: 10px 0 0 0;
