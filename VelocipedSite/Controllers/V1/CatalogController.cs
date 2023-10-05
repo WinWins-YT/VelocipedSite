@@ -10,16 +10,16 @@ public class CatalogController : ControllerBase
 {
     private readonly ILogger<CatalogController> _logger;
 
-    private readonly CatalogItemResponse[] _catalog =
+    private readonly ItemResponse[] _catalog =
     {
-        new("shesterochka", new ItemResponse(0, "Бананы", "Желтые бананы", 
-            "banana.jpg", 69.99)),
-        new("shesterochka", new ItemResponse(1, "Яблоки", "Какие-то яблоки", 
-            "apples.jpg", 99.99)),
-        new("shesterochka", new ItemResponse(2, "Хлеб", "Обычный черный хлеб", 
-            "bread.jpg", 39.99)),
-        new("shesterochka", new ItemResponse(3, "Молоко", "Белое молоко", 
-            "milk.jpeg", 79.99))
+        new("shesterochka", 0, "Бананы", "Желтые бананы", 
+            "banana.jpg", 69.99),
+        new("shesterochka", 1, "Яблоки", "Какие-то яблоки", 
+            "apples.jpg", 99.99),
+        new("shesterochka", 2, "Хлеб", "Обычный черный хлеб", 
+            "bread.jpg", 39.99),
+        new("shesterochka", 3, "Молоко", "Белое молоко", 
+            "milk.jpeg", 79.99)
     };
 
     public CatalogController(ILogger<CatalogController> logger)
@@ -30,7 +30,6 @@ public class CatalogController : ControllerBase
     [HttpGet("[action]")]
     public GetCatalogResponse GetCatalog([FromQuery] GetCatalogRequest request)
     {
-        return new GetCatalogResponse(_catalog.Where(x => x.ShopId == request.ShopId)
-            .Select(x => x.Item).ToArray());
+        return new GetCatalogResponse(_catalog.Where(x => x.ShopId == request.ShopId).ToArray());
     }
 }
