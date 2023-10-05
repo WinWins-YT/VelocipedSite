@@ -5,7 +5,7 @@ export class Counter extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { currentCount: 0 };
+    this.state = { currentCount: 0, shopName: "", loading: true };
     this.incrementCounter = this.incrementCounter.bind(this);
   }
 
@@ -15,20 +15,14 @@ export class Counter extends Component {
     });
   }
   
-  getShopName(shop) {
-      switch (shop) {
-          case "shesterochka":
-              return "Шестерочка";
-              
-          case "waypma":
-              return "Ларек с шаурмой";
-              
-          case "fox":
-              return "Лисья дыра";
-              
-          default:
-              return "Неизвестный"
-      }
+  componentDidMount() {
+      this.getShopName(new URL(window.location.href).searchParams.get("shop"));
+  }
+
+  async getShopName(shop) {
+      const response = await fetch("/api/v1/Shops/GetShopById?id=" + shop);
+      const data = await response.json();
+      this.setState({shopName: data.shop.name, loading: false});
   }
 
   render() {
@@ -36,7 +30,9 @@ export class Counter extends Component {
       <div>
           <h1>Counter</h1>
 
-          <p>Selected shop: {this.getShopName(new URL(window.location.href).searchParams.get("shop"))}</p>
+          {this.state.loading 
+              ? "Loading..." 
+              : <p>Selected shop: {this.state.shopName}</p>}
 
           <p>This is a simple example of a React component.</p>
 
