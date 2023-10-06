@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
-export default function Catalog() {
+export default function CatalogCategories() {
     
     const shopId = new URL(window.location.href).searchParams.get("shop");
     
@@ -21,9 +21,9 @@ export default function Catalog() {
     }
     
     async function getShopCatalog(shop) {
-        const response = await fetch("/api/v1/Catalog/GetCatalog?shopId=" + shop);
+        const response = await fetch("/api/v1/Catalog/GetCatalogCategories?shopId=" + shop);
         const data = await response.json();
-        setCatalog(data.items);
+        setCatalog(data.categories);
         setLoading(false);
     }
     
@@ -31,7 +31,7 @@ export default function Catalog() {
         console.log(catalog);
         return catalog.map(x =>
             <div className={"col-md-4 d-flex align-items-center"}>
-                <Link to={"/item?id=" + x.id}>
+                <Link to={"/category?shop=" + shopId + "&id=" + x.id}>
                     <img className={"shopBanner"} src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
                 </Link>
             </div>
