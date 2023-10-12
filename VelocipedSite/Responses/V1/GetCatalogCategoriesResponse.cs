@@ -1,5 +1,5 @@
 ﻿namespace VelocipedSite.Responses.V1;
 
-public record GetCatalogCategoriesResponse(CatalogCategory[] Categories);
+public record GetCatalogCategoriesResponse(IEnumerable<CatalogCategory> Categories);
 
-public record CatalogCategory(int Id, string Name, string PathToImg);
+public record CatalogCategory(long Id, string Name, string PathToImg);

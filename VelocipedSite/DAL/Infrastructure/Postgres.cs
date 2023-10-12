@@ -10,6 +10,7 @@ namespace VelocipedSite.DAL.Infrastructure;
 public class Postgres
 {
     public static NpgsqlDataSource DataSource { get; private set; }
+    private static readonly NpgsqlSnakeCaseNameTranslator Translator = new NpgsqlSnakeCaseNameTranslator();
 
     public static void MapCompositeTypes(IServiceCollection services)
     {
@@ -17,7 +18,8 @@ public class Postgres
         
         var cfg = services.BuildServiceProvider().GetRequiredService<IOptions<DalOptions>>();
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(cfg.Value.ConnectionString);
-        dataSourceBuilder.MapComposite<ShopEntityV1>("shop_v1", new NpgsqlSnakeCaseNameTranslator());
+        dataSourceBuilder.MapComposite<ShopEntityV1>("shop_v1", Translator);
+        dataSourceBuilder.MapComposite<CatalogEntity_V1>("catalog_v1", Translator);
 
         DataSource = dataSourceBuilder.Build();
     }

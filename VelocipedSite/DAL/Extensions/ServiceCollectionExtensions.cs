@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDalRepositories(this IServiceCollection services)
     {
         services.AddScoped<IShopsRepository, ShopsRepository>();
+        services.AddScoped<ICatalogRepository, CatalogRepository>();
         
         return services;
     }

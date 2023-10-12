@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VelocipedSite.DAL.Models;
+using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Requests.V1;
 using VelocipedSite.Responses.V1;
 
@@ -8,6 +10,7 @@ namespace VelocipedSite.Controllers.V1;
 [Route("/api/v1/[controller]")]
 public class CatalogController : ControllerBase
 {
+    private readonly ICatalogRepository _catalogRepository;
     private readonly ILogger<CatalogController> _logger;
 
     private readonly ItemResponse[] _catalog =
@@ -22,23 +25,22 @@ public class CatalogController : ControllerBase
             "milk.jpeg", 79.99)
     };
 
-    public CatalogController(ILogger<CatalogController> logger)
+    public CatalogController(ICatalogRepository catalogRepository, ILogger<CatalogController> logger)
     {
+        _catalogRepository = catalogRepository;
         _logger = logger;
     }
 
     [HttpGet("[action]")]
-    public GetCatalogCategoriesResponse GetCatalogCategories([FromQuery] GetCatalogCategoriesRequest request)
+    public async Task<GetCatalogCategoriesResponse> GetCatalogCategories([FromQuery] GetCatalogCategoriesRequest request)
     {
-        return request.ShopId switch
+        var categories = await _catalogRepository.Query(new CatalogQueryModel
         {
-            "shesterochka" => new GetCatalogCategoriesResponse(new[]
-            {
-                new CatalogCategory(0, "Фрукты", "banana.jpg"),
-                new CatalogCategory(1, "Хлебобулочные изделия", "bread.jpg"),
-                new CatalogCategory(2, "Молочные продукты", "milk.jpeg")
-            }),
-            _ => new GetCatalogCategoriesResponse(Array.Empty<CatalogCategory>())
-        };
+            ShopId = request.ShopId
+        });
+
+        return new GetCatalogCategoriesResponse(categories
+            .Select(x => new CatalogCategory(x.Id, x.Name, x.PathToImg)));
+
     }
 }

@@ -13,14 +13,6 @@ public class ShopsController : ControllerBase
     private readonly IShopsRepository _shopsRepository;
     private readonly ILogger<ShopsController> _logger;
 
-    private readonly ShopResponse[] _shops =
-    {
-        new("Шестерочка", "shet.jpg", "shesterochka"),
-        new("Красное и Белое", "logokb-2022.jpg", "kb"),
-        new("Ларек с шаурмой", "waypma.jpeg", "waypma"),
-        new("Лисья дыра", "fox.png", "fox")
-    };
-
     public ShopsController(IShopsRepository shopsRepository, ILogger<ShopsController> logger)
     {
         _shopsRepository = shopsRepository;
