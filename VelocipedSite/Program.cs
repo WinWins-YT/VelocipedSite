@@ -1,3 +1,6 @@
+using VelocipedSite.DAL.Extensions;
+using VelocipedSite.DAL.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,8 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.CustomSchemaIds(x => x.FullName);
 });
+builder.Services
+    .AddDalInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -28,5 +33,5 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
-
+app.MigrateUp();
 app.Run();
