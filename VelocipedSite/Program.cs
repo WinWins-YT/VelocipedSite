@@ -10,8 +10,8 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(x => x.FullName);
 });
 builder.Services
-    .AddDalRepositories()
-    .AddDalInfrastructure(builder.Configuration);
+    .AddDalInfrastructure(builder.Configuration)
+    .AddDalRepositories();
 
 var app = builder.Build();
 

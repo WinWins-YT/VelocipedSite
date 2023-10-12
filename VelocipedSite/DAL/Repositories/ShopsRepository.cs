@@ -9,7 +9,7 @@ namespace VelocipedSite.DAL.Repositories;
 
 public class ShopsRepository : BaseRepository, IShopsRepository
 {
-    protected ShopsRepository(IOptions<DalOptions> dalOptions) : base(dalOptions.Value)
+    public ShopsRepository(IOptions<DalOptions> dalOptions) : base(dalOptions.Value)
     {
     }
 

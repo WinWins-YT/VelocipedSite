@@ -30,7 +30,6 @@ public class Postgres
                     return cfg.Value.ConnectionString;
                 })
                 .ScanIn(typeof(Postgres).Assembly).For.Migrations()
-            )
-            .AddLogging(lb => lb.AddFluentMigratorConsole());
+            );
     }
 }

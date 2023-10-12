@@ -31,6 +31,7 @@ public class ShopsController : ControllerBase
     public async Task<GetShopsResponse> GetShops([FromQuery] GetShopsRequest request)
     {
         var shops = await _shopsRepository.QueryAll();
+        _logger.LogInformation("Get all shops succeeded");
         return new GetShopsResponse(shops
             .Select(x => new ShopResponse(x.Name, x.PathToImg, x.ShopId)));
     }
@@ -42,6 +43,7 @@ public class ShopsController : ControllerBase
         {
             ShopId = request.Id
         });
+        _logger.LogInformation("Get shop by ID succeeded");
         return new GetShopByIdResponse(new ShopResponse(shop.Name, shop.PathToImg, shop.ShopId));
     }
 }
