@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.Runner;
 
-namespace VelocipedSite.DAL.Infrastructure;
+namespace VelocipedSite.DAL.Extensions;
 
 public static class HostExtensions
 {

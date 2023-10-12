@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VelocipedSite.DAL.Models;
+using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Requests.V1;
 using VelocipedSite.Responses.V1;
 
@@ -8,6 +10,7 @@ namespace VelocipedSite.Controllers.V1;
 [Route("/api/v1/[controller]")]
 public class ShopsController : ControllerBase
 {
+    private readonly IShopsRepository _shopsRepository;
     private readonly ILogger<ShopsController> _logger;
 
     private readonly ShopResponse[] _shops =
@@ -18,20 +21,27 @@ public class ShopsController : ControllerBase
         new("Лисья дыра", "fox.png", "fox")
     };
 
-    public ShopsController(ILogger<ShopsController> logger)
+    public ShopsController(IShopsRepository shopsRepository, ILogger<ShopsController> logger)
     {
+        _shopsRepository = shopsRepository;
         _logger = logger;
     }
     
     [HttpGet("[action]")]
-    public GetShopsResponse GetShops([FromQuery] GetShopsRequest request)
+    public async Task<GetShopsResponse> GetShops([FromQuery] GetShopsRequest request)
     {
-        return new GetShopsResponse(_shops);
+        var shops = await _shopsRepository.QueryAll();
+        return new GetShopsResponse(shops
+            .Select(x => new ShopResponse(x.Name, x.PathToImg, x.ShopId)));
     }
 
     [HttpGet("[action]")]
-    public GetShopByIdResponse GetShopById([FromQuery] GetShopByIdRequest request)
+    public async Task<GetShopByIdResponse> GetShopById([FromQuery] GetShopByIdRequest request)
     {
-        return new GetShopByIdResponse(_shops.First(x => x.Id == request.Id));
+        var shop = await _shopsRepository.QueryById(new ShopsQueryModel
+        {
+            ShopId = request.Id
+        });
+        return new GetShopByIdResponse(new ShopResponse(shop.Name, shop.PathToImg, shop.ShopId));
     }
 }

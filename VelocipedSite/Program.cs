@@ -1,5 +1,4 @@
 using VelocipedSite.DAL.Extensions;
-using VelocipedSite.DAL.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +10,7 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(x => x.FullName);
 });
 builder.Services
+    .AddDalRepositories()
     .AddDalInfrastructure(builder.Configuration);
 
 var app = builder.Build();
