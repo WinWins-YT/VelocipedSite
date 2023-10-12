@@ -28,11 +28,11 @@ export default function CatalogCategories() {
     }
     
     function renderCatalog(catalog) {
-        console.log(catalog);
         return catalog.map(x =>
             <div className={"col-md-4 d-flex align-items-center"}>
-                <Link to={"/category?shop=" + shopId + "&id=" + x.id}>
-                    <img className={"shopBanner"} src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
+                <Link className={"categoryBanner"} to={"/category?shop=" + shopId + "&id=" + x.id}>
+                    <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
+                    <p>{x.name}</p>
                 </Link>
             </div>
         );
@@ -42,7 +42,7 @@ export default function CatalogCategories() {
         <>
             <img className={"shopBanner d-flex align-items-center"} src={"images/" + shopImgUrl} alt={""}/><br/>
             <div style={{justifyContent: "center"}} className={"row"}>
-                <h3>Популярное:</h3>
+                <h3>Категории:</h3>
                 {loading
                     ? <p style={{textAlign: "center"}}><em>Loading...</em></p>
                     : renderCatalog(catalog)}

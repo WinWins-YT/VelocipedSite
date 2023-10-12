@@ -22,7 +22,7 @@ export class Home extends Component {
     renderShops(shops) {
       return shops.map(x =>
           <div className={"col-md-4 d-flex align-items-center shopBannerContainer"}>
-              <Link to={"/catalogcategories?shop=" + x.id}>
+              <Link to={"/catalog/categories?shop=" + x.id}>
                   <img className={"shopBanner"} src={"images/" + x.pathToImg} alt={""}/>
               </Link>
           </div>

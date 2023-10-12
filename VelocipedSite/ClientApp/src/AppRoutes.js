@@ -13,7 +13,7 @@ const AppRoutes = [
     element: <Counter />
   },
   {
-    path: '/catalogcategories',
+    path: '/catalog/categories',
     element: <CatalogCategories />
   }, 
   {

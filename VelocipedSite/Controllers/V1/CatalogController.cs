@@ -30,11 +30,15 @@ public class CatalogController : ControllerBase
     [HttpGet("[action]")]
     public GetCatalogCategoriesResponse GetCatalogCategories([FromQuery] GetCatalogCategoriesRequest request)
     {
-        return new GetCatalogCategoriesResponse(new[]
+        return request.ShopId switch
         {
-            new CatalogCategory(0, "Фрукты", "banana.jpg"),
-            new CatalogCategory(1, "Хлебобулочные изделия", "bread.jpg"),
-            new CatalogCategory(2, "Молочные продукты", "milk.jpeg")
-        });
+            "shesterochka" => new GetCatalogCategoriesResponse(new[]
+            {
+                new CatalogCategory(0, "Фрукты", "banana.jpg"),
+                new CatalogCategory(1, "Хлебобулочные изделия", "bread.jpg"),
+                new CatalogCategory(2, "Молочные продукты", "milk.jpeg")
+            }),
+            _ => new GetCatalogCategoriesResponse(Array.Empty<CatalogCategory>())
+        };
     }
 }
