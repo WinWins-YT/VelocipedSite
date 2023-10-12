@@ -46,6 +46,7 @@ code {
   width: auto;
   height: 300px;
   top: 0;
+  transition: top ease-in-out 0.5s;
   margin: 10px 0 0 0;
 }
 
@@ -56,6 +57,10 @@ code {
   color: black;
   transition: color ease-in-out 0.5s;
   font-size: 24px;
+}
+
+.categoryBanner img:hover {
+  top: -10px;
 }
 
 .categoryBanner img:hover ~ p {
