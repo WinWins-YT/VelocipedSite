@@ -13,6 +13,8 @@ public class Postgres
 
     public static void MapCompositeTypes(IServiceCollection services)
     {
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+        
         var cfg = services.BuildServiceProvider().GetRequiredService<IOptions<DalOptions>>();
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(cfg.Value.ConnectionString);
         dataSourceBuilder.MapComposite<ShopEntityV1>("shop_v1", new NpgsqlSnakeCaseNameTranslator());
