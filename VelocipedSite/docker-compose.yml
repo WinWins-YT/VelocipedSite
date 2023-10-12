@@ -1,0 +1,12 @@
+version: "3"
+services:
+  velociped-local:
+    image: postgres
+    restart: always
+    container_name: velociped-local
+    environment:
+      POSTGRES_USER: "VelocipedUser"
+      POSTGRES_DB: "VelocipedDelivery"
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "15430:5432"
