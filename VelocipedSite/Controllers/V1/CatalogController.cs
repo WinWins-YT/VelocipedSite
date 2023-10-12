@@ -41,6 +41,5 @@ public class CatalogController : ControllerBase
 
         return new GetCatalogCategoriesResponse(categories
             .Select(x => new CatalogCategory(x.Id, x.Name, x.PathToImg)));
-
     }
 }
