@@ -10,6 +10,7 @@ export class Home extends Component {
   }
   
   componentDidMount() {
+      document.title = "Главная";
       this.populateShopsList();
   }
 

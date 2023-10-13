@@ -37,12 +37,17 @@ code {
 
 .categoryBanner {
   text-decoration: none;
+  align-items: center;
+}
+
+.categoryBanner div {
+  display: grid;
+  justify-items: center;
 }
 
 .categoryBanner img {
   border-radius: 20px;
   position: relative;
-  vertical-align: center;
   width: auto;
   height: 300px;
   top: 0;
@@ -53,7 +58,6 @@ code {
 .categoryBanner p {
   text-align: center;
   position: relative;
-  bottom: 16px;
   color: black;
   transition: color ease-in-out 0.5s;
   font-size: 24px;

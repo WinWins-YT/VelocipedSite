@@ -28,9 +28,15 @@ public class AddShopsDemoData : Migration
             })
             .Row(new
             {
-                shop_id = "fox",
-                name = "Лисья дыра",
-                path_to_img = "fox.png"
+                shop_id = "leroy",
+                name = "Леруа Мерлен",
+                path_to_img = "leroy.jpg"
+            })
+            .Row(new
+            {
+                shop_id = "bakery",
+                name = "Булочная",
+                path_to_img = "bakery.jpg"
             });
     }
 

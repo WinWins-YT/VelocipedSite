@@ -10,6 +10,7 @@ export default function CatalogCategories() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        document.title = "Категории";
         getShop(shopId);
         getShopCatalog(shopId);
     }, [shopId]);
@@ -31,8 +32,10 @@ export default function CatalogCategories() {
         return catalog.map(x =>
             <div className={"col-md-4 d-flex align-items-center"}>
                 <Link className={"categoryBanner"} to={"/category?shop=" + shopId + "&id=" + x.id}>
-                    <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
-                    <p>{x.name}</p>
+                    <div>
+                        <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
+                        <p>{x.name}</p>
+                    </div>
                 </Link>
             </div>
         );
