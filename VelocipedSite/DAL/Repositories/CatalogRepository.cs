@@ -31,4 +31,24 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
 
         return categories.ToArray();
     }
+
+    public async Task<CatalogEntity_V1> QueryById(CatalogQueryModel query, CancellationToken token = default)
+    {
+        const string sqlQuery = """
+                                SELECT id, shop_id, name, path_to_img FROM categories
+                                WHERE id = @Id AND (shop_id = @ShopId OR @ShopId IS NULL)
+                                """;
+
+        var sqlQueryParams = new
+        {
+            Id = query.Id,
+            ShopId = query.ShopId
+        };
+
+        await using var connection = await OpenConnection();
+        var category = await connection.QueryAsync<CatalogEntity_V1>(
+            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+
+        return category.Single();
+    }
 }
