@@ -36,7 +36,7 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
     {
         const string sqlQuery = """
                                 SELECT id, shop_id, name, path_to_img FROM categories
-                                WHERE id = @Id AND (shop_id = @ShopId OR @ShopId IS NULL)
+                                WHERE id = @Id AND (shop_id = @ShopId OR (@ShopId = '') IS NOT FALSE)
                                 """;
 
         var sqlQueryParams = new

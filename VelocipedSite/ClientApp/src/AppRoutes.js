@@ -18,7 +18,7 @@ const AppRoutes = [
     element: <CatalogCategories />
   },
   {
-    path: '/catalog',
+    path: '/category',
     element: <Category />
   },
   {

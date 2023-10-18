@@ -5,14 +5,20 @@ import './NavMenu.css';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
+  static obj;
 
   constructor (props) {
     super(props);
 
+    NavMenu.obj = this;
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
       collapsed: true
     };
+  }
+  
+  static rerender() {
+    NavMenu.obj.forceUpdate();
   }
 
   toggleNavbar () {
@@ -36,6 +42,13 @@ export class NavMenu extends Component {
                   </NavItem>
                   <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/fetch-data">Помощь</NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/fetch-data">
+                      <p><span className="material-symbols-outlined">
+                        shopping_cart
+                      </span>{JSON.parse(localStorage.getItem("cart")).length}</p>
+                    </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/fetch-data">
