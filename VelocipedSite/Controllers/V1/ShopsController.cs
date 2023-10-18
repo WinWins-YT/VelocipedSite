@@ -26,7 +26,7 @@ public class ShopsController : ControllerBase
         var shops = await _shopsRepository.QueryAll();
         _logger.LogInformation("Get all shops succeeded");
         return new GetShopsResponse(shops
-            .Select(x => new ShopResponse(x.Name, x.PathToImg, x.ShopId)));
+            .Select(x => new Shop(x.Id, x.Name, x.PathToImg, x.ShopId)));
     }
 
     [HttpGet("[action]")]
@@ -36,7 +36,7 @@ public class ShopsController : ControllerBase
         {
             ShopId = request.Id
         });
-        _logger.LogInformation("Get shop by ID succeeded");
-        return new GetShopByIdResponse(new ShopResponse(shop.Name, shop.PathToImg, shop.ShopId));
+        _logger.LogInformation("Get shop by ID {Id} succeeded", request.Id);
+        return new GetShopByIdResponse(new Shop(shop.Id, shop.Name, shop.PathToImg, shop.ShopId));
     }
 }

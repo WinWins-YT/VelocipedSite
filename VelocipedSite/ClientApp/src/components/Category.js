@@ -1,6 +1,7 @@
-﻿import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
-export default function Catalog() 
+export default function Category() 
 {
     const shopId = new URL(window.location.href).searchParams.get("shop");
     const id = new URL(window.location.href).searchParams.get("id");
@@ -13,10 +14,11 @@ export default function Catalog()
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getShop(shopId);
-        getCatalog(id);
-        document.title = `${catalogName} - ${shopName}`;
-    }, []);
+        getShop(shopId)
+            .then(() => getCatalog(id)
+                .then(() => document.title = `${catalogName} - ${shopName}`));
+        getProducts();
+    }, [catalogName, id, shopId, shopName]);
 
     async function getShop(shop) {
         const response = await fetch("/api/v1/Shops/GetShopById?id=" + shop);
@@ -32,12 +34,28 @@ export default function Catalog()
         setCatalogImgUrl(data.catalogCategory.pathToImg);
     }
     
-    async function getProducts(categoryId) {
-        I
+    async function getProducts() {
+        const response = await fetch(`/api/v1/Products/GetProductsInCategory?catalogId=${id}&shopId=${shopId}`);
+        const data = await response.json();
+        setProducts(data.products);
+        setLoading(false);
     }
     
     function renderCatalog() {
-        
+        return products.map(x => 
+            <div className={"align-items-center"}>
+                <p>{catalogName}</p>
+                <div className={"col-md-4 d-flex align-items-center"}>
+                    <Link className={"categoryBanner"} to={"/product?shop=" + shopId + "&id=" + x.id}>
+                        <div>
+                            <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
+                            <p>{x.name}</p>
+                            <p>{x.price} руб.</p>
+                        </div>
+                    </Link>
+                </div>
+            </div>
+        );
     }
     
     return (
