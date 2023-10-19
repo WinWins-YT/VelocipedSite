@@ -74,3 +74,23 @@ code {
 .categoryBanner p:hover {
   color: royalblue;
 }
+
+.fullItem{
+  position: fixed;
+  background: rgba(21, 60, 90, 0.518);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  z-index: 10000;
+}
+
+.fullItem > div{
+  width: 650px;
+  position: relative;
+  margin: 8% auto;
+  padding: 25px 20px;
+  background: #F5F5DC;
+  border-radius: 15px;
+}

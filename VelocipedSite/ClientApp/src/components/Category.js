@@ -13,6 +13,7 @@ export default function Category()
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [reload, setReload] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(() => {
         async function load() {
@@ -47,9 +48,13 @@ export default function Category()
     
     function addToCart(productId) {
         cart = JSON.parse(localStorage.getItem("cart"));
+        if (cart.some(x => x.shopId !== shopId)) {
+            setShowDialog(true);
+            return;
+        }
         cart.push({
             id: productId,
-            name: "Niggers"
+            shopId: shopId
         });
         localStorage.setItem("cart", JSON.stringify(cart));
         setReload(!reload);
@@ -62,6 +67,13 @@ export default function Category()
         localStorage.setItem("cart", JSON.stringify(cart));
         setReload(!reload);
         NavMenu.rerender();
+    }
+    
+    function clearCart() {
+        localStorage.setItem("cart", "[]");
+        setReload(!reload);
+        NavMenu.rerender();
+        setShowDialog(false);
     }
     
     function renderCatalog() {
@@ -95,6 +107,21 @@ export default function Category()
                 loading ? <p><em>Loading...</em></p>
                     : renderCatalog()
             }
+            {
+                showDialog && <DialogBox onNo={setShowDialog} onYes={clearCart} />
+            }
+        </div>
+    )
+}
+
+function DialogBox(props) {
+    return (
+        <div className={"fullItem"}>
+            <div>
+                <p>У вас в корзине есть товары из другого магазина. Чтобы заказать из разных магазинов, сделайте раздельные заказы. Хотите очистить корзину?</p>
+                <button onClick={props.onYes} className={"btn btn-success"}>Да</button>
+                <button onClick={() => props.onNo(false)} className={"btn btn-danger"} style={{marginLeft: "8px"}}>Нет</button>
+            </div>
         </div>
     )
 }
