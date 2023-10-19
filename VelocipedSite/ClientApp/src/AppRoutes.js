@@ -3,6 +3,7 @@ import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import CatalogCategories from "./components/CatalogCategories";
 import Category from "./components/Category";
+import Cart from "./components/Cart";
 
 const AppRoutes = [
   {
@@ -20,6 +21,10 @@ const AppRoutes = [
   {
     path: '/category',
     element: <Category />
+  },
+  {
+    path: '/cart',
+    element: <Cart />
   },
   {
     path: '/fetch-data',

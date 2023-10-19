@@ -43,6 +43,7 @@ code {
 .justify-center {
   display: grid;
   justify-items: center;
+  vertical-align: center;
 }
 
 .categoryBanner img {

@@ -32,4 +32,25 @@ public class ProductsRepository : BaseRepository, IProductsRepository
 
         return products.ToArray();
     }
+
+    public async Task<ProductEntity_V1> QueryById(ProductQueryByIdModel query, CancellationToken token = default)
+    {
+        const string sqlQuery = """
+                                SELECT id, shop_id, category_id, name, description, path_to_img, price FROM products
+                                WHERE id = @ProductId AND shop_id = @ShopId AND category_id = @CategoryId
+                                """;
+
+        var sqlQueryParams = new
+        {
+            ProductId = query.ProductId,
+            ShopId = query.ShopId,
+            CategoryId = query.CategoryId
+        };
+
+        await using var connection = await OpenConnection();
+        var product = await connection.QueryAsync<ProductEntity_V1>(
+            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+
+        return product.Single();
+    }
 }

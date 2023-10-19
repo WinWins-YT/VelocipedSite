@@ -30,14 +30,24 @@ public class ProductsController : ControllerBase
             CategoryId = request.CatalogId
         });
         
+        _logger.LogInformation("Get products in category {Id}", request.CatalogId);
         return new GetProductsInCatalogResponse(products.Select(x =>
             new Product(x.Id, x.CategoryId, x.ShopId, x.Name, x.Description, x.PathToImg, x.Price)));
-        // return new GetProductsInCatalogResponse(new[]
-        // {
-        //     new Product(0, 0, "shesterochka", "Бананы", "Желтые бананы", "banana.jpg", new decimal(69.99)),
-        //     new Product(1, 0, "shesterochka", "Яблоки", "Какие-то яблоки", "apples.jpg", new decimal(99.99)),
-        //     //new Product(2, 1, "shesterochka", "Хлеб", "Обычный черный хлеб","bread.jpg", new decimal(39.99)),
-        //     //new Product(3, 2, "shesterochka", "Молоко", "Белое молоко", "milk.jpeg", new decimal(79.99))
-        // });
+    }
+
+    [HttpGet]
+    public async Task<GetProductByIdResponse> GetProductById(
+        [FromQuery] GetProductByIdRequest request)
+    {
+        var product = await _productsRepository.QueryById(new ProductQueryByIdModel
+        {
+            ShopId = request.ShopId,
+            CategoryId = request.CategoryId,
+            ProductId = request.ProductId
+        });
+
+        _logger.LogInformation("Get product by ID {Id}", request.ProductId);
+        return new GetProductByIdResponse(new Product(product.Id, product.CategoryId, product.ShopId, 
+            product.Name, product.Description, product.PathToImg, product.Price));
     }
 }

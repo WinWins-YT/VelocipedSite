@@ -44,7 +44,7 @@ export class NavMenu extends Component {
                     <NavLink tag={Link} className="text-dark" to="/fetch-data">Помощь</NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/fetch-data">
+                    <NavLink tag={Link} className="text-dark" to="/cart">
                       <p><span className="material-symbols-outlined">
                         shopping_cart
                       </span>{JSON.parse(localStorage.getItem("cart")).length}</p>

@@ -46,24 +46,22 @@ export default function Category()
         setLoading(false);
     }
     
-    function addToCart(productId) {
+    function addToCart(product) {
         cart = JSON.parse(localStorage.getItem("cart"));
         if (cart.some(x => x.shopId !== shopId)) {
             setShowDialog(true);
             return;
         }
-        cart.push({
-            id: productId,
-            shopId: shopId
-        });
+        product.quantity = 1;
+        cart.push(product);
         localStorage.setItem("cart", JSON.stringify(cart));
         setReload(!reload);
         NavMenu.rerender();
     }
     
-    function removeFromCart(productId) {
+    function removeFromCart(product) {
         cart = JSON.parse(localStorage.getItem("cart"));
-        cart = cart.filter(x => x.id !== productId);
+        cart = cart.filter(x => x.id !== product.id);
         localStorage.setItem("cart", JSON.stringify(cart));
         setReload(!reload);
         NavMenu.rerender();
@@ -89,8 +87,8 @@ export default function Category()
                             <p>{x.name}</p>
                             <p>{x.price} руб.</p>
                             {cart.some(e => e.id === x.id)
-                                ? <button onClick={() => removeFromCart(x.id)} className="btn btn-outline-danger align-self-center">Удалить из корзины</button>
-                                : <button onClick={() => addToCart(x.id)} className="btn btn-primary align-self-center">Добавить в корзину</button>}
+                                ? <button onClick={() => removeFromCart(x)} className="btn btn-outline-danger align-self-center">Удалить из корзины</button>
+                                : <button onClick={() => addToCart(x)} className="btn btn-primary align-self-center">Добавить в корзину</button>}
                         </div>
                     )
                 }
