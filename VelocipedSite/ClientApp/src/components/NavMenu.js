@@ -51,7 +51,7 @@ export class NavMenu extends Component {
                     </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/fetch-data">
+                    <NavLink tag={Link} className="text-dark" to="/profile">
                       <span className="material-symbols-outlined">
                         account_circle
                       </span>

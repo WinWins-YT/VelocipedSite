@@ -1,6 +1,6 @@
 ﻿namespace VelocipedSite.DAL.Entities;
 
-public record ShopEntityV1
+public record ShopEntity_V1
 {
     public long Id { get; init; }
     public string ShopId { get; init; } = "";

@@ -49,5 +49,9 @@ public class InitSchema : Migration
         Delete.Table("shops");
         Delete.Table("categories");
         Delete.Table("products");
+
+        Delete.ForeignKey("categories_shop_id_fk");
+        Delete.ForeignKey("products_shop_id_fk");
+        Delete.ForeignKey("products_category_id_fk");
     }
 }

@@ -14,18 +14,18 @@ public class ShopsRepository : BaseRepository, IShopsRepository
     {
     }
 
-    public async Task<ShopEntityV1[]> QueryAll(CancellationToken token)
+    public async Task<ShopEntity_V1[]> QueryAll(CancellationToken token)
     {
         const string sqlQuery = "SELECT id, shop_id, name, path_to_img, min_price FROM shops";
 
         await using var connection = await OpenConnection();
-        var shops = await connection.QueryAsync<ShopEntityV1>(
+        var shops = await connection.QueryAsync<ShopEntity_V1>(
             new CommandDefinition(sqlQuery, cancellationToken: token));
 
         return shops.ToArray();
     }
 
-    public async Task<ShopEntityV1> QueryById(ShopsQueryModel query, CancellationToken token)
+    public async Task<ShopEntity_V1> QueryById(ShopsQueryModel query, CancellationToken token)
     {
         try
         {
@@ -40,7 +40,7 @@ public class ShopsRepository : BaseRepository, IShopsRepository
             };
 
             await using var connection = await OpenConnection();
-            var shop = await connection.QueryAsync<ShopEntityV1>(
+            var shop = await connection.QueryAsync<ShopEntity_V1>(
                 new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
 
             return shop.Single();

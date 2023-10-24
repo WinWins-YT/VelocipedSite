@@ -4,6 +4,7 @@ import { Home } from "./components/Home";
 import CatalogCategories from "./components/CatalogCategories";
 import Category from "./components/Category";
 import Cart from "./components/Cart";
+import Profile from "./components/Profile";
 
 const AppRoutes = [
   {
@@ -25,6 +26,10 @@ const AppRoutes = [
   {
     path: '/cart',
     element: <Cart />
+  },
+  {
+    path: '/profile',
+    element: <Profile />
   },
   {
     path: '/fetch-data',
