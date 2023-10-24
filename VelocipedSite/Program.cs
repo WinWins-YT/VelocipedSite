@@ -1,10 +1,21 @@
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using VelocipedSite.ActionFilters;
 using VelocipedSite.DAL.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddMvcOptions(options =>
+    {
+        options.Filters.Add<ExceptionFilterAttribute>();
+        options.Filters.Add(new ResponseTypeAttribute((int)HttpStatusCode.BadRequest));
+        options.Filters.Add(new ResponseTypeAttribute((int)HttpStatusCode.InternalServerError));
+        options.Filters.Add(new ProducesResponseTypeAttribute((int)HttpStatusCode.OK));
+    });
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.CustomSchemaIds(x => x.FullName);

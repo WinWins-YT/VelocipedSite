@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Options;
 using VelocipedSite.DAL.Entities;
+using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.DAL.Settings;
@@ -34,21 +35,28 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
 
     public async Task<CatalogEntity_V1> QueryById(CatalogQueryModel query, CancellationToken token = default)
     {
-        const string sqlQuery = """
-                                SELECT id, shop_id, name, path_to_img FROM categories
-                                WHERE id = @Id AND (shop_id = @ShopId OR (@ShopId = '') IS NOT FALSE)
-                                """;
-
-        var sqlQueryParams = new
+        try
         {
-            Id = query.Id,
-            ShopId = query.ShopId
-        };
+            const string sqlQuery = """
+                                    SELECT id, shop_id, name, path_to_img FROM categories
+                                    WHERE id = @Id AND (shop_id = @ShopId OR (@ShopId = '') IS NOT FALSE)
+                                    """;
 
-        await using var connection = await OpenConnection();
-        var category = await connection.QueryAsync<CatalogEntity_V1>(
-            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+            var sqlQueryParams = new
+            {
+                Id = query.Id,
+                ShopId = query.ShopId
+            };
 
-        return category.Single();
+            await using var connection = await OpenConnection();
+            var category = await connection.QueryAsync<CatalogEntity_V1>(
+                new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+
+            return category.Single();
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new EntityNotFoundException("No catalog category found by this ID", ex);
+        }
     }
 }
