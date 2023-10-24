@@ -16,13 +16,29 @@ export default function CatalogCategories() {
     }, [shopId]);
     
     async function getShop(shop) {
-        const response = await fetch("/api/v1/Shops/GetShopById?id=" + shop);
+        const response = await fetch("/api/v1/Shops/GetShopById", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: shopId
+            })
+        });
         const data = await response.json();
         setShopImgUrl(data.shop.pathToImg);
     }
     
     async function getShopCatalog(shop) {
-        const response = await fetch("/api/v1/Catalog/GetCatalogCategories?shopId=" + shop);
+        const response = await fetch("/api/v1/Catalog/GetCatalogCategories", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                shopId: shopId
+            })
+        });
         const data = await response.json();
         setCatalog(data.categories);
         setLoading(false);

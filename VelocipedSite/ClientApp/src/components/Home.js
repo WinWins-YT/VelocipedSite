@@ -15,7 +15,13 @@ export class Home extends Component {
   }
 
     async populateShopsList() {
-      const response = await fetch("/api/v1/Shops/GetShops");
+      const response = await fetch("/api/v1/Shops/GetShops", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: "{}"
+      });
       const data = await response.json();
       this.setState({shops: data.shops, loading: false});
     }

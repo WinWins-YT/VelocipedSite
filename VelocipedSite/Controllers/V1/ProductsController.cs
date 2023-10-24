@@ -20,9 +20,9 @@ public class ProductsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<GetProductsInCatalogResponse> GetProductsInCategory(
-        [FromQuery] GetProductsInCatalogRequest request)
+        GetProductsInCatalogRequest request)
     {
         var products = await _productsRepository.Query(new ProductsQueryModel
         {
@@ -35,9 +35,9 @@ public class ProductsController : ControllerBase
             new Product(x.Id, x.CategoryId, x.ShopId, x.Name, x.Description, x.PathToImg, x.Price)));
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<GetProductByIdResponse> GetProductById(
-        [FromQuery] GetProductByIdRequest request)
+        GetProductByIdRequest request)
     {
         var product = await _productsRepository.QueryById(new ProductQueryByIdModel
         {

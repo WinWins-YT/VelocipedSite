@@ -20,9 +20,9 @@ public class CatalogController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<GetCatalogCategoriesResponse> GetCatalogCategories(
-        [FromQuery] GetCatalogCategoriesRequest request)
+        GetCatalogCategoriesRequest request)
     {
         var categories = await _catalogRepository.Query(new CatalogQueryModel
         {
@@ -34,9 +34,9 @@ public class CatalogController : ControllerBase
             .Select(x => new CatalogCategory(x.Id, x.Name, x.PathToImg)));
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<GetCatalogCategoryByIdResponse> GetCatalogCategoryById(
-        [FromQuery] GetCatalogCategoryByIdRequest request)
+        GetCatalogCategoryByIdRequest request)
     {
         var category = await _catalogRepository.QueryById(new CatalogQueryModel
         {

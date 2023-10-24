@@ -8,7 +8,7 @@ using VelocipedSite.Responses.V1;
 namespace VelocipedSite.Controllers.V1;
 
 [ApiController]
-[Route("/api/v1/[controller]")]
+[Route("/api/v1/[controller]/[action]")]
 public class ShopsController : ControllerBase
 {
     private readonly IShopsRepository _shopsRepository;
@@ -20,8 +20,8 @@ public class ShopsController : ControllerBase
         _logger = logger;
     }
     
-    [HttpGet("[action]")]
-    public async Task<GetShopsResponse> GetShops([FromQuery] GetShopsRequest request)
+    [HttpPost]
+    public async Task<GetShopsResponse> GetShops(GetShopsRequest request)
     {
         var shops = await _shopsRepository.QueryAll();
         _logger.LogInformation("Get all shops succeeded");
@@ -29,8 +29,8 @@ public class ShopsController : ControllerBase
             .Select(x => new Shop(x.Id, x.Name, x.PathToImg, x.ShopId)));
     }
 
-    [HttpGet("[action]")]
-    public async Task<GetShopByIdResponse> GetShopById([FromQuery] GetShopByIdRequest request)
+    [HttpPost]
+    public async Task<GetShopByIdResponse> GetShopById(GetShopByIdRequest request)
     {
         var shop = await _shopsRepository.QueryById(new ShopsQueryModel
         {

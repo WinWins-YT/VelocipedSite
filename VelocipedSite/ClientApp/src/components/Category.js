@@ -27,12 +27,28 @@ export default function Category()
 
 
     async function getShopAndCatalog(shop, categoryId) {
-        let response = await fetch("/api/v1/Shops/GetShopById?id=" + shop);
+        let response = await fetch("/api/v1/Shops/GetShopById", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: shop
+            })
+        });
         let data = await response.json();
         setShopImgUrl(data.shop.pathToImg);
         let shopName = data.shop.name;
 
-        response = await fetch("/api/v1/Catalog/GetCatalogCategoryById?catalogId=" + categoryId);
+        response = await fetch("/api/v1/Catalog/GetCatalogCategoryById", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                catalogId: categoryId
+            })
+        });
         data = await response.json();
         setCatalogName(data.catalogCategory.name);
 
@@ -40,7 +56,16 @@ export default function Category()
     }
     
     async function getProducts() {
-        const response = await fetch(`/api/v1/Products/GetProductsInCategory?catalogId=${id}&shopId=${shopId}`);
+        const response = await fetch("/api/v1/Products/GetProductsInCategory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                shopId: shopId,
+                catalogId: id
+            })
+        });
         const data = await response.json();
         setProducts(data.products);
         setLoading(false);
