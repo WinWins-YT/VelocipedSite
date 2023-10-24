@@ -77,8 +77,12 @@ export default function Category()
             setShowDialog(true);
             return;
         }
-        product.quantity = 1;
-        cart.push(product);
+        cart.push({
+            id: product.id,
+            categoryId: product.categoryId,
+            shopId: product.shopId,
+            quantity: 1
+        });
         localStorage.setItem("cart", JSON.stringify(cart));
         setReload(!reload);
         NavMenu.rerender();

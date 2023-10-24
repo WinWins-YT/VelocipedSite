@@ -16,7 +16,8 @@ public class AddShopV1Type : Migration
                                                 id          bigint,
                                                 shop_id     text,
                                                 name        text,
-                                                path_to_img text
+                                                path_to_img text,
+                                                min_price   numeric(19,5)
                                             );
                                         END IF;
                                     END

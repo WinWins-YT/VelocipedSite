@@ -13,7 +13,8 @@ public class InitSchema : Migration
             .WithColumn("id").AsInt64().PrimaryKey("shops_pk").Identity()
             .WithColumn("shop_id").AsString().NotNullable().Unique()
             .WithColumn("name").AsString().NotNullable()
-            .WithColumn("path_to_img").AsString().NotNullable();
+            .WithColumn("path_to_img").AsString().NotNullable()
+            .WithColumn("min_price").AsDecimal().NotNullable();
 
         Create.Table("categories")
             .WithColumn("id").AsInt64().PrimaryKey("catalog_pk").Identity()

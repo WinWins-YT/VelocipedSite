@@ -27,10 +27,12 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
         };
 
         await using var connection = await OpenConnection();
-        var categories = await connection.QueryAsync<CatalogEntity_V1>(
-            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+        var categories = (await connection.QueryAsync<CatalogEntity_V1>(
+            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token))).ToArray();
 
-        return categories.ToArray();
+        if (categories.Length == 0)
+            throw new EntityNotFoundException("No catalog categories found by this Shop ID");
+        return categories;
     }
 
     public async Task<CatalogEntity_V1> QueryById(CatalogQueryModel query, CancellationToken token = default)

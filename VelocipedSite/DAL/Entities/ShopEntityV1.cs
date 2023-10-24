@@ -6,4 +6,5 @@ public record ShopEntityV1
     public string ShopId { get; init; } = "";
     public string Name { get; init; } = "";
     public string PathToImg { get; init; } = "";
+    public decimal MinPrice { get; init; }
 }

@@ -1,23 +1,65 @@
 import {useEffect, useState} from "react";
 import {NavMenu} from "./NavMenu";
+import {useNavigate} from "react-router-dom";
 
-export default function Cart() {
-    let cart = JSON.parse(localStorage.getItem("cart"));
-    const shopId = cart.length > 0 ? cart[0].shopId : "";
-    
-    const [shopImgUrl, setShopImgUrl] = useState("");
+export default function Cart() {    
+    const [shop, setShop] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")));
     const [reload, setReload] = useState(false);
+
+    const shopId = cart.length > 0 ? cart[0].shopId : "";
+    document.title = "Корзина";
 
     useEffect(() => {
         getShop();
-        //getGoods();
+        getGoods()
+            .then(() => setReload(!reload));
         // eslint-disable-next-line
     }, []);
     
+    let nav = useNavigate();
+    function Navigate(url) {
+        nav(url);
+    }
+    
     async function getShop() {
-        let response = await fetch("/api/v1/Shops/GetShopById?id=" + shopId);
+        if (shopId === "")
+            return;
+        
+        let response = await fetch("/api/v1/Shops/GetShopById", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: shopId
+            })
+        });
         let data = await response.json();
-        setShopImgUrl(data.shop.pathToImg);
+        setShop(data.shop);
+        document.title = "Корзина - " + data.shop.name;
+    }
+    
+    async function getGoods() {
+        setCart(await Promise.all(cart.map(async x => {
+            const response = await fetch ("/api/v1/Products/GetProductById", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    productId: x.id,
+                    categoryId: x.categoryId,
+                    shopId: x.shopId
+                })
+            });
+            
+            const data = (await response.json()).product;
+            data.quantity = x.quantity;
+            return data;
+        })));
+        setLoading(false);
     }
     
     function addQuantity(product) {
@@ -46,13 +88,17 @@ export default function Cart() {
         NavMenu.rerender();
     }
     
+    const sum = cart.reduce((partialSum, a) => partialSum + (a.price * a.quantity), 0) + 100;
+    console.log(shop);
+    
     return (
         <div>
             <div style={{justifyContent: "center"}} className={"row"}>
-                <img className={"shopBanner col-md-4 d-flex align-items-center"} src={"images/" + shopImgUrl} alt={""}/><br/>
+                <img className={"shopBanner col-md-4 d-flex align-items-center"} src={"images/" + shop.pathToImg} alt={""}/><br/>
             </div>
             <br/>
             {cart.length > 0 ?
+                loading ? <em>Loading...</em> :
                 <table align={"center"} width={"90%"}>
                     <thead>
                         <tr>
@@ -65,7 +111,7 @@ export default function Cart() {
                         </tr>
                     </thead>
                     <tbody>
-                        {cart.map(x =>
+                        {cart.map(x => 
                             <tr>
                                 <td className={"categoryBanner"}>
                                     <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
@@ -92,6 +138,38 @@ export default function Cart() {
                             </tr>
                         )}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Доставка:</td>
+                            <td>100 руб.</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><b>Итого:</b></td>
+                            <td>{sum.toFixed(2)} руб.</td>
+                        </tr>
+                        <tr>
+                            <td colSpan={5}>
+                                {
+                                    shop.minPrice > (sum - 100) 
+                                        ? <b>Минимальная сумма заказа из данного магазина: {shop.minPrice} руб.</b>
+                                        : ""
+                                }
+                            </td>
+                            <td>
+                                {
+                                    shop.minPrice > (sum - 100) 
+                                        ? <button className={"btn btn-danger"} disabled={true}>Оформить заказ</button>
+                                        : <button className={"btn btn-success"} onClick={() => nav("/checkout")}>Оформить заказ</button>
+                                }
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
                 : <p>Корзина пуста</p>
             }

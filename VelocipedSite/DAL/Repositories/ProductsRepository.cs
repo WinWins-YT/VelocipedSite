@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Options;
 using VelocipedSite.DAL.Entities;
+using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.DAL.Settings;
@@ -27,10 +28,12 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         };
 
         await using var connection = await OpenConnection();
-        var products = await connection.QueryAsync<ProductEntity_V1>(
-            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
+        var products = (await connection.QueryAsync<ProductEntity_V1>(
+            new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token))).ToArray();
 
-        return products.ToArray();
+        if (products.Length == 0)
+            throw new EntityNotFoundException("No products found in this catalog category");
+        return products;
     }
 
     public async Task<ProductEntity_V1> QueryById(ProductQueryByIdModel query, CancellationToken token = default)

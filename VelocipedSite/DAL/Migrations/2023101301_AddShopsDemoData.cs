@@ -12,31 +12,36 @@ public class AddShopsDemoData : Migration
             {
                 shop_id = "shesterochka",
                 name = "Шестерочка",
-                path_to_img = "shet.jpg"
+                path_to_img = "shet.jpg",
+                min_price = 500
             })
             .Row(new
             {
                 shop_id = "kb",
                 name = "Красное и Белое",
-                path_to_img = "logokb-2022.jpg"
+                path_to_img = "logokb-2022.jpg",
+                min_price = 300
             })
             .Row(new
             {
                 shop_id = "waypma",
                 name = "Ларек с шаурмой",
-                path_to_img = "waypma.jpeg"
+                path_to_img = "waypma.jpeg",
+                min_price = 400
             })
             .Row(new
             {
                 shop_id = "leroy",
                 name = "Леруа Мерлен",
-                path_to_img = "leroy.jpg"
+                path_to_img = "leroy.jpg",
+                min_price = 1000
             })
             .Row(new
             {
                 shop_id = "bakery",
                 name = "Булочная",
-                path_to_img = "bakery.jpg"
+                path_to_img = "bakery.jpg",
+                min_price = 350
             });
     }
 
