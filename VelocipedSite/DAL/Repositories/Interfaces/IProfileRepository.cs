@@ -5,5 +5,6 @@ namespace VelocipedSite.DAL.Repositories.Interfaces;
 
 public interface IProfileRepository
 {
-    Task<TokenEntity_V1> GetTokenForUser(TokenForUserQuery query, CancellationToken cancellationToken = default);
+    Task<TokenEntity_V1> GetToken(TokenQuery query, CancellationToken cancellationToken = default);
+    Task<UserEntity_V1> GetUserFromToken(TokenQuery query, CancellationToken cancellationToken = default);
 }

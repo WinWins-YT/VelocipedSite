@@ -27,6 +27,8 @@ public class AddUsersTable : Migration
             .WithColumn("id").AsInt64().PrimaryKey("orders_pk").Identity()
             .WithColumn("user_id").AsInt64().NotNullable()
             .WithColumn("date").AsDateTime().NotNullable()
+            .WithColumn("address").AsString().NotNullable()
+            .WithColumn("phone").AsString().NotNullable()
             .WithColumn("products").AsCustom("product_v1[]").NotNullable();
 
         Create.ForeignKey("tokens_user_id_fk")

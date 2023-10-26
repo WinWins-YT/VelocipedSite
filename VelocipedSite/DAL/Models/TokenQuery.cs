@@ -1,6 +1,6 @@
 ﻿namespace VelocipedSite.DAL.Models;
 
-public record TokenForUserQuery
+public record TokenQuery
 {
     public string Token { get; init; }
 }

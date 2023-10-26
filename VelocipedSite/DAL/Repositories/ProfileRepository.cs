@@ -1,10 +1,12 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using VelocipedSite.DAL.Entities;
 using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.DAL.Settings;
+using VelocipedSite.Models;
 using VelocipedSite.Requests.V1;
 using VelocipedSite.Responses.V1;
 
@@ -16,7 +18,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
     {
     }
 
-    public async Task<TokenEntity_V1> GetTokenForUser(TokenForUserQuery query, CancellationToken cancellationToken = default)
+    public async Task<TokenEntity_V1> GetToken(TokenQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -39,6 +41,33 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         catch (InvalidOperationException exception)
         {
             throw new EntityNotFoundException("No token found", exception);
+        }
+    }
+
+    public async Task<UserEntity_V1> GetUserFromToken(TokenQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    SELECT * FROM users
+                                    WHERE id=(SELECT user_id FROM tokens
+                                                                WHERE token = @Token)
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                Token = query.Token
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<UserEntity_V1>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No user found", exception);
         }
     }
 }

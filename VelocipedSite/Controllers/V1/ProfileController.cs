@@ -2,6 +2,7 @@
 using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
+using VelocipedSite.Models;
 using VelocipedSite.Requests.V1;
 using VelocipedSite.Responses.V1;
 
@@ -25,7 +26,7 @@ public class ProfileController : ControllerBase
     {
         try
         {
-            var token = await _profileRepository.GetTokenForUser(new TokenForUserQuery
+            var token = await _profileRepository.GetToken(new TokenQuery
             {
                 Token = request.Token
             });
@@ -44,6 +45,46 @@ public class ProfileController : ControllerBase
             {
                 IsValid = false,
                 ValidUntil = new DateTime()
+            };
+        }
+    }
+
+    [HttpPost]
+    public async Task<GetUserByTokenResponse> GetUserByToken(GetUserByTokenRequest request)
+    {
+        try
+        {
+            var token = await _profileRepository.GetToken(new TokenQuery
+            {
+                Token = request.Token
+            });
+
+            var isValid = token.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds > 0;
+
+            if (!isValid)
+                return new GetUserByTokenResponse
+                {
+                    User = null,
+                    IsValid = false
+                };
+
+            var user = await _profileRepository.GetUserFromToken(new TokenQuery
+            {
+                Token = token.Token
+            });
+
+            return new GetUserByTokenResponse
+            {
+                IsValid = true,
+                User = new User(user.Id, user.Email, user.Password, user.FirstName, user.LastName, user.Address, user.Phone)
+            };
+        }
+        catch (EntityNotFoundException)
+        {
+            return new GetUserByTokenResponse
+            {
+                IsValid = false,
+                User = null
             };
         }
     }
