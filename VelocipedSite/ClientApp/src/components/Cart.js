@@ -19,9 +19,6 @@ export default function Cart() {
     }, []);
     
     let nav = useNavigate();
-    function Navigate(url) {
-        nav(url);
-    }
     
     async function getShop() {
         if (shopId === "")
@@ -88,7 +85,7 @@ export default function Cart() {
         NavMenu.rerender();
     }
     
-    const sum = cart.reduce((partialSum, a) => partialSum + (a.price * a.quantity), 0) + 100;
+    const sum = cart.reduce((partialSum, a) => partialSum + ((a.isOnSale ? a.salePrice : a.price) * a.quantity), 0) + shop.deliveryPrice;
     console.log(shop);
     
     return (
@@ -117,7 +114,11 @@ export default function Cart() {
                                     <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
                                 </td>
                                 <td><p>{x.name}</p></td>
-                                <td><p>{x.price}</p></td>
+                                {
+                                    x.isOnSale
+                                        ? <td><p style={{color: "red", fontWeight: "bold"}}>{x.salePrice}</p></td>
+                                        : <td><p>{x.price}</p></td>
+                                }
                                 <td>
                                     <p className={"justify-center"}>
                                         <button onClick={() => addQuantity(x)} className={"btn btn-outline-info"}>+</button>
@@ -126,7 +127,7 @@ export default function Cart() {
                                     </p>
                                 </td>
                                 <td>
-                                    <p>{(x.price * x.quantity).toFixed(2)}</p>
+                                    <p>{((x.isOnSale ? x.salePrice : x.price) * x.quantity).toFixed(2)}</p>
                                 </td>
                                 <td>
                                     <button onClick={() => removeFromCart(x)} className={"btn btn-danger"}>
@@ -144,7 +145,7 @@ export default function Cart() {
                             <td></td>
                             <td></td>
                             <td>Доставка:</td>
-                            <td>100 руб.</td>
+                            <td>{shop.deliveryPrice} руб.</td>
                         </tr>
                         <tr>
                             <td></td>
@@ -156,14 +157,14 @@ export default function Cart() {
                         <tr>
                             <td colSpan={5}>
                                 {
-                                    shop.minPrice > (sum - 100) 
-                                        ? <b>Минимальная сумма заказа из данного магазина: {shop.minPrice} руб.</b>
+                                    shop.minPrice > (sum - shop.deliveryPrice) 
+                                        ? <b>Минимальная сумма заказа без учета стоимости доставки из данного магазина: {shop.minPrice} руб.</b>
                                         : ""
                                 }
                             </td>
                             <td>
                                 {
-                                    shop.minPrice > (sum - 100) 
+                                    shop.minPrice > (sum - shop.deliveryPrice) 
                                         ? <button className={"btn btn-danger"} disabled={true}>Оформить заказ</button>
                                         : <button className={"btn btn-success"} onClick={() => nav("/checkout")}>Оформить заказ</button>
                                 }

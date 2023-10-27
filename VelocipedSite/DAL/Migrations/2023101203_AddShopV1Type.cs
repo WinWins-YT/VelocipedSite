@@ -13,11 +13,12 @@ public class AddShopV1Type : Migration
                                         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shop_v1') THEN
                                             CREATE TYPE shop_v1 AS
                                             (
-                                                id          bigint,
-                                                shop_id     text,
-                                                name        text,
-                                                path_to_img text,
-                                                min_price   numeric(19,5)
+                                                id              bigint,
+                                                shop_id         text,
+                                                name            text,
+                                                path_to_img     text,
+                                                min_price       numeric(19,5),
+                                                delivery_price  numeric(19,5)
                                             );
                                         END IF;
                                     END

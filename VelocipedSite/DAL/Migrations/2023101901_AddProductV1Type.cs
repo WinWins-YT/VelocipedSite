@@ -19,7 +19,11 @@ public class AddProductV1Type : Migration
                                                 name            text,
                                                 description     text,
                                                 path_to_img     text,
-                                                price           numeric(19,5)
+                                                price           numeric(19,5),
+                                                is_on_sale      boolean,
+                                                sale_start      timestamp,
+                                                sale_end        timestamp,
+                                                sale_price      numeric(19,5)
                                             );
                                         END IF;
                                     END

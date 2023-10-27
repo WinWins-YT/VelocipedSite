@@ -1,3 +1,3 @@
 ﻿namespace VelocipedSite.Models;
 
-public record Shop(long Id, string Name, string PathToImg, string ShopId, decimal MinPrice);
+public record Shop(long Id, string Name, string PathToImg, string ShopId, decimal MinPrice, decimal DeliveryPrice);

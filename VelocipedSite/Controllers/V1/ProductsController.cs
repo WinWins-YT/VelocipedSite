@@ -32,7 +32,9 @@ public class ProductsController : ControllerBase
         
         _logger.LogInformation("Get products in category {Id}", request.CatalogId);
         return new GetProductsInCatalogResponse(products.Select(x =>
-            new Product(x.Id, x.CategoryId, x.ShopId, x.Name, x.Description, x.PathToImg, x.Price)));
+            new Product(x.Id, x.CategoryId, x.ShopId, x.Name, x.Description, x.PathToImg, x.Price,
+                x.IsOnSale && x.SaleStart < DateTime.UtcNow && x.SaleEnd > DateTime.UtcNow, 
+                x.SalePrice)));
     }
 
     [HttpPost]
@@ -48,6 +50,8 @@ public class ProductsController : ControllerBase
 
         _logger.LogInformation("Get product by ID {Id}", request.ProductId);
         return new GetProductByIdResponse(new Product(product.Id, product.CategoryId, product.ShopId, 
-            product.Name, product.Description, product.PathToImg, product.Price));
+            product.Name, product.Description, product.PathToImg, product.Price,
+            product.IsOnSale && product.SaleStart < DateTime.UtcNow && product.SaleEnd > DateTime.UtcNow, 
+            product.SalePrice));
     }
 }

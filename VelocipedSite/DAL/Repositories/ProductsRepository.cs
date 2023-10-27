@@ -17,7 +17,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
     public async Task<ProductEntity_V1[]> Query(ProductsQueryModel query, CancellationToken token = default)
     {
         const string sqlQuery = """
-                                SELECT id, shop_id, category_id, name, description, path_to_img, price FROM products
+                                SELECT * FROM products
                                 WHERE category_id = @CategoryId AND shop_id = @ShopId
                                 """;
 
@@ -39,7 +39,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
     public async Task<ProductEntity_V1> QueryById(ProductQueryByIdModel query, CancellationToken token = default)
     {
         const string sqlQuery = """
-                                SELECT id, shop_id, category_id, name, description, path_to_img, price FROM products
+                                SELECT * FROM products
                                 WHERE id = @ProductId AND shop_id = @ShopId AND category_id = @CategoryId
                                 """;
 

@@ -7,4 +7,5 @@ public interface IProfileRepository
 {
     Task<TokenEntity_V1> GetToken(TokenQuery query, CancellationToken cancellationToken = default);
     Task<UserEntity_V1> GetUserFromToken(TokenQuery query, CancellationToken cancellationToken = default);
+    Task<long[]> RemoveToken(TokenQuery query, CancellationToken cancellationToken = default);
 }

@@ -1,13 +1,13 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
-import {Card, Container} from "reactstrap";
+import {Button, Container} from "react-bootstrap";
 
 export default function Profile() {
     const token = localStorage.getItem("auth_token");
     
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({});
+    //const [loggedIn, setLoggedIn] = useState(false);
+    //const [user, setUser] = useState({});
     
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -35,71 +35,70 @@ export default function Profile() {
         })
             .then(response => response.json())
             .then(json => {
-                setLoggedIn(json.isValid);
+                //setLoggedIn(json.isValid);
                 if (!json.isValid)
                     nav("/login");
-                setUser(json.user);
+                //setUser(json.user);
+                
+                setFirstName(json.user.firstName);
+                setLastName(json.user.lastName);
+                setEmail(json.user.email);
+                setAddress(json.user.address);
+                setPhone(json.user.phone);
             });
     }
     
-    function set(key, value) {
-        switch (key) {
-            case "firstName":
-                user.firstName = value;
-                setUser(user);
-                break;
-                
-            case "lastName":
-                user.lastName = value;
-                setUser(user);
-                break;
-                
-            case "email":
-                user.email = value;
-                setUser(user);
-                break;
-                
-            case "address":
-                user.address = value;
-                setUser(user);
-                break;
-                
-            case "phone":
-                user.phone = value;
-                setUser(user);
-                break;
-        }
+    async function logout() {
+        localStorage.removeItem("auth_token");
+        await fetch("/api/v1/Profile/InvalidateToken", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token
+            })
+        });
+        
+        nav('/login');
     }
     
     return (
         <Container
             className="d-flex justify-content-center align-items-center">
-            <Form>
+            <Form style={{width: "100%"}}>
                 <Form.Group className="mb-3" controlId="userForm.firstNameControl">
                     <Form.Label>Имя</Form.Label>
-                    <Form.Control value={user.firstName}
-                                  onChange={e => set("firstName", e.target.value)} />
+                    <Form.Control value={firstName}
+                                  onChange={e => setFirstName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="userForm.lastNameControl">
                     <Form.Label>Фамилия</Form.Label>
-                    <Form.Control value={user.lastName}
-                                  onChange={e => set("lastName", e.target.value)} />
+                    <Form.Control value={lastName}
+                                  onChange={e => setLastName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="userForm.emailControl">
                     <Form.Label>E-Mail</Form.Label>
-                    <Form.Control value={user.email}
+                    <Form.Control value={email}
                                   type={"email"}
-                                  onChange={e => set("email", e.target.value)} />
+                                  onChange={e => setEmail(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="userForm.addressControl">
                     <Form.Label>Адрес</Form.Label>
-                    <Form.Control value={user.address}
-                                  onChange={e => set("address", e.target.value)} />
+                    <Form.Control value={address}
+                                  onChange={e => setAddress(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="userForm.phoneControl">
                     <Form.Label>Номер телефона</Form.Label>
-                    <Form.Control value={user.phone}
-                                  onChange={e => set("phone", e.target.value)} />
+                    <Form.Control value={phone}
+                                  onChange={e => setPhone(e.target.value)} />
+                </Form.Group>
+                <Form.Group style={{marginBottom: "16px"}}>
+                    <Button variant={"success"}>Сохранить изменения</Button>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Button style={{marginRight: "8px"}} variant={"outline-primary"}>Сменить пароль</Button>
+                    <Button style={{marginRight: "8px"}} onClick={logout} variant={"outline-danger"}>Выйти из аккаунта</Button>
                 </Form.Group>
             </Form>
         </Container>

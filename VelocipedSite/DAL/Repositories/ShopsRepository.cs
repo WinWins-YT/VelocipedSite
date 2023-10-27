@@ -16,7 +16,7 @@ public class ShopsRepository : BaseRepository, IShopsRepository
 
     public async Task<ShopEntity_V1[]> QueryAll(CancellationToken token)
     {
-        const string sqlQuery = "SELECT id, shop_id, name, path_to_img, min_price FROM shops";
+        const string sqlQuery = "SELECT * FROM shops";
 
         await using var connection = await OpenConnection();
         var shops = await connection.QueryAsync<ShopEntity_V1>(
@@ -30,7 +30,7 @@ public class ShopsRepository : BaseRepository, IShopsRepository
         try
         {
             const string sqlQuery = """
-                                    SELECT id, shop_id, name, path_to_img, min_price FROM shops
+                                    SELECT * FROM shops
                                     WHERE shop_id = @ShopId
                                     """;
 

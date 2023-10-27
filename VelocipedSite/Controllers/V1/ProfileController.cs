@@ -33,14 +33,16 @@ public class ProfileController : ControllerBase
 
             var isValid = DateTime.UtcNow.Subtract(token.ValidUntil).TotalSeconds > 0;
 
+            _logger.LogInformation("Checked token {Token}, result is {IsValid}", request.Token, isValid);
             return new CheckTokenResponse
             {
                 IsValid = isValid,
                 ValidUntil = token.ValidUntil
             };
         }
-        catch (EntityNotFoundException)
+        catch (EntityNotFoundException ex)
         {
+            _logger.LogError("Checked token {Token}: {Message}", request.Token, ex.Message);
             return new CheckTokenResponse
             {
                 IsValid = false,
@@ -60,7 +62,8 @@ public class ProfileController : ControllerBase
             });
 
             var isValid = token.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds > 0;
-
+            
+            _logger.LogInformation("Getting user by token {Token}, IsValid: {IsValid}", request.Token, isValid);
             if (!isValid)
                 return new GetUserByTokenResponse
                 {
@@ -76,16 +79,28 @@ public class ProfileController : ControllerBase
             return new GetUserByTokenResponse
             {
                 IsValid = true,
-                User = new User(user.Id, user.Email, user.Password, user.FirstName, user.LastName, user.Address, user.Phone)
+                User = new User(user.Id, user.Email, user.FirstName, user.LastName, user.Address, user.Phone)
             };
         }
-        catch (EntityNotFoundException)
+        catch (EntityNotFoundException ex)
         {
+            _logger.LogError("Getting user by token {Token}: {Message}", request.Token, ex.Message);
             return new GetUserByTokenResponse
             {
                 IsValid = false,
                 User = null
             };
         }
+    }
+
+    [HttpPost]
+    public async Task InvalidateToken(InvalidateTokenRequest request)
+    {
+        _logger.LogInformation("Invalidating token {Token}", request.Token);
+        var ids = await _profileRepository.RemoveToken(new TokenQuery
+        {
+            Token = request.Token
+        });
+        _logger.LogInformation("Invalidation succeeded, deleted token with ID {Id}", ids.First());
     }
 }

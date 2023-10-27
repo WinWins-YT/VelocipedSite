@@ -13,35 +13,40 @@ public class AddShopsDemoData : Migration
                 shop_id = "shesterochka",
                 name = "Шестерочка",
                 path_to_img = "shet.jpg",
-                min_price = 500
+                min_price = 500,
+                delivery_price = 150
             })
             .Row(new
             {
                 shop_id = "kb",
                 name = "Красное и Белое",
                 path_to_img = "logokb-2022.jpg",
-                min_price = 300
+                min_price = 300,
+                delivery_price = 50
             })
             .Row(new
             {
                 shop_id = "waypma",
                 name = "Ларек с шаурмой",
                 path_to_img = "waypma.jpeg",
-                min_price = 400
+                min_price = 400,
+                delivery_price = 70
             })
             .Row(new
             {
                 shop_id = "leroy",
                 name = "Леруа Мерлен",
                 path_to_img = "leroy.jpg",
-                min_price = 1000
+                min_price = 1000,
+                delivery_price = 500
             })
             .Row(new
             {
                 shop_id = "bakery",
                 name = "Булочная",
                 path_to_img = "bakery.jpg",
-                min_price = 350
+                min_price = 350,
+                delivery_price = 100
             });
     }
 

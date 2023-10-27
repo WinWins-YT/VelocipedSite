@@ -14,7 +14,8 @@ public class InitSchema : Migration
             .WithColumn("shop_id").AsString().NotNullable().Unique()
             .WithColumn("name").AsString().NotNullable()
             .WithColumn("path_to_img").AsString().NotNullable()
-            .WithColumn("min_price").AsDecimal().NotNullable();
+            .WithColumn("min_price").AsDecimal().NotNullable()
+            .WithColumn("delivery_price").AsDecimal().NotNullable();
 
         Create.Table("categories")
             .WithColumn("id").AsInt64().PrimaryKey("catalog_pk").Identity()
@@ -29,7 +30,11 @@ public class InitSchema : Migration
             .WithColumn("name").AsString().NotNullable()
             .WithColumn("description").AsString().NotNullable()
             .WithColumn("path_to_img").AsString().NotNullable()
-            .WithColumn("price").AsDecimal().NotNullable();
+            .WithColumn("price").AsDecimal().NotNullable()
+            .WithColumn("is_on_sale").AsBoolean().NotNullable()
+            .WithColumn("sale_start").AsDateTime().Nullable()
+            .WithColumn("sale_end").AsDateTime().Nullable()
+            .WithColumn("sale_price").AsDecimal().Nullable();
 
         Create.ForeignKey("categories_shop_id_fk")
             .FromTable("categories").ForeignColumn("shop_id")

@@ -15,7 +15,8 @@ public class AddProductsDemoData : Migration
                 name = "Бананы",
                 description = "Желтые бананы",
                 path_to_img = "banana.jpg", 
-                price = new decimal(69.99)
+                price = new decimal(69.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -24,7 +25,11 @@ public class AddProductsDemoData : Migration
                 name = "Яблоки",
                 description = "Какие-то яблоки",
                 path_to_img = "apples.jpg", 
-                price = new decimal(99.99)
+                price = new decimal(99.99),
+                is_on_sale = true,
+                sale_start = new DateTime(2023, 10, 01, 12, 00, 00),
+                sale_end = new DateTime(2023, 11, 15, 00, 00, 00),
+                sale_price = new decimal(79.99)
             })
             
             .Row(new
@@ -34,7 +39,8 @@ public class AddProductsDemoData : Migration
                 name = "Хлеб черный",
                 description = "Обычный черный хлеб",
                 path_to_img = "bread.jpg", 
-                price = new decimal(39.99)
+                price = new decimal(39.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -43,7 +49,8 @@ public class AddProductsDemoData : Migration
                 name = "Пирожок с капустой",
                 description = "Капуста в тесте",
                 path_to_img = "pirozki.jpg", 
-                price = new decimal(19.99)
+                price = new decimal(19.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -53,7 +60,11 @@ public class AddProductsDemoData : Migration
                 name = "Молоко",
                 description = "Белое молоко",
                 path_to_img = "milk.jpeg",
-                price = new decimal(79.99)
+                price = new decimal(79.99),
+                is_on_sale = true,
+                sale_start = new DateTime(2023, 10, 01, 12, 00, 00),
+                sale_end = new DateTime(2023, 11, 15, 00, 00, 00),
+                sale_price = new decimal(59.99)
             })
             .Row(new
             {
@@ -62,7 +73,11 @@ public class AddProductsDemoData : Migration
                 name = "Сметана",
                 description = "Просто сметанка",
                 path_to_img = "Smietana.jpg",
-                price = new decimal(99.99)
+                price = new decimal(99.99),
+                is_on_sale = true,
+                sale_start = new DateTime(2023, 10, 01, 12, 00, 00),
+                sale_end = new DateTime(2023, 11, 15, 00, 00, 00),
+                sale_price = new decimal(79.99)
             })
             
             .Row(new
@@ -72,7 +87,8 @@ public class AddProductsDemoData : Migration
                 name = "Чипсы",
                 description = "Картошка жаренная",
                 path_to_img = "chips.jpg",
-                price = new decimal(49.99)
+                price = new decimal(49.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -81,7 +97,8 @@ public class AddProductsDemoData : Migration
                 name = "Сухарики",
                 description = "Сухой хлеб",
                 path_to_img = "snacks.jpg",
-                price = new decimal(29.99)
+                price = new decimal(29.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -91,7 +108,8 @@ public class AddProductsDemoData : Migration
                 name = "Кола",
                 description = "Черная вода",
                 path_to_img = "cola.jpg",
-                price = new decimal(129.99)
+                price = new decimal(129.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -100,7 +118,8 @@ public class AddProductsDemoData : Migration
                 name = "Байкал",
                 description = "Хилка",
                 path_to_img = "bajkal.jpg",
-                price = new decimal(129.99)
+                price = new decimal(129.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -110,7 +129,8 @@ public class AddProductsDemoData : Migration
                 name = "Балтика",
                 description = "Спиртовая хилка",
                 path_to_img = "baltika.jpg",
-                price = new decimal(49.99)
+                price = new decimal(49.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -119,7 +139,8 @@ public class AddProductsDemoData : Migration
                 name = "Водка Старлей",
                 description = "Водичка",
                 path_to_img = "vodka.jpg",
-                price = new decimal(199.99)
+                price = new decimal(199.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -129,7 +150,8 @@ public class AddProductsDemoData : Migration
                 name = "Шаурма со свининой",
                 description = "Халяль",
                 path_to_img = "shaurma.jpg",
-                price = new decimal(169.99)
+                price = new decimal(169.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -138,7 +160,8 @@ public class AddProductsDemoData : Migration
                 name = "Шаурма с курицей",
                 description = "Не халяль",
                 path_to_img = "shaurma.jpg",
-                price = new decimal(169.99)
+                price = new decimal(169.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -148,7 +171,11 @@ public class AddProductsDemoData : Migration
                 name = "Гамбургер с курицей",
                 description = "Не халяль",
                 path_to_img = "gamburger.jpg",
-                price = new decimal(129.99)
+                price = new decimal(129.99),
+                is_on_sale = true,
+                sale_start = new DateTime(2023, 10, 01, 12, 00, 00),
+                sale_end = new DateTime(2023, 11, 15, 00, 00, 00),
+                sale_price = new decimal(79.99)
             })
             .Row(new
             {
@@ -157,7 +184,8 @@ public class AddProductsDemoData : Migration
                 name = "Гамбургер с говядиной",
                 description = "Не халяль",
                 path_to_img = "gamburger.jpg",
-                price = new decimal(129.99)
+                price = new decimal(129.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -167,7 +195,8 @@ public class AddProductsDemoData : Migration
                 name = "Картошка фри",
                 description = "Картошка",
                 path_to_img = "fries.jpg",
-                price = new decimal(99.99)
+                price = new decimal(99.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -176,7 +205,8 @@ public class AddProductsDemoData : Migration
                 name = "Картошка по-деревенски",
                 description = "Картошка",
                 path_to_img = "potatoes.jpg",
-                price = new decimal(99.99)
+                price = new decimal(99.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -186,7 +216,8 @@ public class AddProductsDemoData : Migration
                 name = "Красные обои",
                 description = "Обои",
                 path_to_img = "redwall.jpg",
-                price = new decimal(249.99)
+                price = new decimal(249.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -195,7 +226,8 @@ public class AddProductsDemoData : Migration
                 name = "Синие обои",
                 description = "Обои",
                 path_to_img = "bluewall.jpg",
-                price = new decimal(249.99)
+                price = new decimal(249.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -205,7 +237,8 @@ public class AddProductsDemoData : Migration
                 name = "Доска",
                 description = "Просто доска",
                 path_to_img = "plank.jpg",
-                price = new decimal(299.99)
+                price = new decimal(299.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -214,7 +247,8 @@ public class AddProductsDemoData : Migration
                 name = "Палета досок",
                 description = "Просто много досок",
                 path_to_img = "planks.jpg",
-                price = new decimal(29999.99)
+                price = new decimal(29999.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -224,7 +258,8 @@ public class AddProductsDemoData : Migration
                 name = "Красная краска",
                 description = "Просто краска",
                 path_to_img = "redpaint.jpg",
-                price = new decimal(499.99)
+                price = new decimal(499.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -233,7 +268,8 @@ public class AddProductsDemoData : Migration
                 name = "Синяя краска",
                 description = "Просто краска",
                 path_to_img = "bluepaint.jpg",
-                price = new decimal(499.99)
+                price = new decimal(499.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -243,7 +279,8 @@ public class AddProductsDemoData : Migration
                 name = "Хлеб",
                 description = "Хлебушек",
                 path_to_img = "bread.png",
-                price = new decimal(39.99)
+                price = new decimal(39.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -252,7 +289,8 @@ public class AddProductsDemoData : Migration
                 name = "Булка",
                 description = "Булочка с воздухом",
                 path_to_img = "bulka.jpg",
-                price = new decimal(29.99)
+                price = new decimal(29.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -262,7 +300,8 @@ public class AddProductsDemoData : Migration
                 name = "Осетинский пирог",
                 description = "Пирог с сыром",
                 path_to_img = "osetin.jpg",
-                price = new decimal(199.99)
+                price = new decimal(199.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -271,7 +310,8 @@ public class AddProductsDemoData : Migration
                 name = "Яблочный пирог",
                 description = "Пирог с яблоком",
                 path_to_img = "applepie.jpg",
-                price = new decimal(249.99)
+                price = new decimal(249.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -281,7 +321,8 @@ public class AddProductsDemoData : Migration
                 name = "Панчо",
                 description = "Торт сметанный",
                 path_to_img = "pancho.webp",
-                price = new decimal(699.99)
+                price = new decimal(699.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -290,7 +331,8 @@ public class AddProductsDemoData : Migration
                 name = "Фантазия",
                 description = "Торт с орешками",
                 path_to_img = "fantasia.jpg",
-                price = new decimal(899.99)
+                price = new decimal(899.99),
+                is_on_sale = false
             })
             
             .Row(new
@@ -300,7 +342,8 @@ public class AddProductsDemoData : Migration
                 name = "Овсянное",
                 description = "Печенье овсянное",
                 path_to_img = "ovs.jpeg",
-                price = new decimal(299.99)
+                price = new decimal(299.99),
+                is_on_sale = false
             })
             .Row(new
             {
@@ -309,7 +352,8 @@ public class AddProductsDemoData : Migration
                 name = "Имбирное",
                 description = "Печенье имбирное",
                 path_to_img = "imbir.jpg",
-                price = new decimal(399.99)
+                price = new decimal(399.99),
+                is_on_sale = false
             });
     }
 

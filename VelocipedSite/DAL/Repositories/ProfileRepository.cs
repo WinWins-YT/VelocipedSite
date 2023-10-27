@@ -70,4 +70,27 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             throw new EntityNotFoundException("No user found", exception);
         }
     }
+
+    public async Task<long[]> RemoveToken(TokenQuery query, CancellationToken cancellationToken = default)
+    {
+        const string sqlQuery = """
+                                DELETE FROM tokens
+                                WHERE token = @Token
+                                RETURNING id
+                                """;
+
+        var sqlQueryParam = new
+        {
+            Token = query.Token
+        };
+
+        await using var connection = await OpenConnection();
+        var rows = (await connection.QueryAsync<long>(new CommandDefinition(sqlQuery, sqlQueryParam, 
+            cancellationToken: cancellationToken))).ToArray();
+
+        if (rows.Length == 0)
+            throw new EntityNotFoundException("No token found to invalidate");
+
+        return rows;
+    }
 }

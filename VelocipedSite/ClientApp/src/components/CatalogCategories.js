@@ -13,6 +13,8 @@ export default function CatalogCategories() {
         document.title = "Категории";
         getShop(shopId);
         getShopCatalog(shopId);
+
+        // eslint-disable-next-line
     }, [shopId]);
     
     async function getShop(shop) {

@@ -114,7 +114,15 @@ export default function Category()
                                 <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
                             </Link>
                             <p>{x.name}</p>
-                            <p>{x.price} руб.</p>
+                            {x.isOnSale 
+                                ? 
+                                <>
+                                    <p style={{textDecoration: "line-through"}}>{x.price} руб.</p>
+                                    <p style={{color: "red", fontWeight: "bold"}}>{x.salePrice} руб.</p>
+                                </>
+                                :
+                                <p>{x.price} руб.</p>
+                            }
                             {cart.some(e => e.id === x.id)
                                 ? <button onClick={() => removeFromCart(x)} className="btn btn-outline-danger align-self-center">Удалить из корзины</button>
                                 : <button onClick={() => addToCart(x)} className="btn btn-primary align-self-center">Добавить в корзину</button>}
