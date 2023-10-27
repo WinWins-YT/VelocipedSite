@@ -19,8 +19,8 @@ public class AddUsersTable : Migration
         
         Create.Table("tokens")
             .WithColumn("id").AsInt64().PrimaryKey("tokens_pk").Identity()
-            .WithColumn("token").AsString().NotNullable()
-            .WithColumn("user_id").AsInt64().NotNullable()
+            .WithColumn("token").AsGuid().NotNullable()
+            .WithColumn("user_id").AsInt64().NotNullable().Unique()
             .WithColumn("valid_until").AsDateTime().NotNullable();
 
         Create.Table("orders")

@@ -14,7 +14,7 @@ public class AddTokenV1Type : Migration
                                             CREATE TYPE token_v1 AS
                                             (
                                                 id              bigint,
-                                                token           text,
+                                                token           uuid,
                                                 user_id         bigint,
                                                 valid_until     timestamp
                                             );

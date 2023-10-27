@@ -1,4 +1,4 @@
-﻿namespace VelocipedSite.Responses.V1;
+﻿namespace VelocipedSite.Responses.V1.Profile;
 
 public record CheckTokenResponse
 {

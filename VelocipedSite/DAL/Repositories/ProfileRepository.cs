@@ -67,8 +67,55 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
         catch (InvalidOperationException exception)
         {
-            throw new EntityNotFoundException("No user found", exception);
+            throw new EntityNotFoundException("No user found by this token", exception);
         }
+    }
+
+    public async Task<UserEntity_V1> GetUserByEmail(EmailQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    SELECT * FROM users
+                                    WHERE email=@Email
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                Email = query.Email
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<UserEntity_V1>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No user found with this email", exception);
+        }
+    }
+
+    public async Task<TokenEntity_V1> CreateTokenForUser(CreateTokenQuery query, CancellationToken cancellationToken = default)
+    {
+        const string sqlQuery = """
+                                INSERT INTO tokens (token, user_id, valid_until)
+                                VALUES (gen_random_uuid(), @UserId, @ValidUntil)
+                                RETURNING token;
+                                """;
+
+        var sqlQueryParam = new
+        {
+            UserId = query.UserId,
+            ValidUntil = DateTime.UtcNow.AddDays(7)
+        };
+
+        await using var connection = await OpenConnection();
+        var token = await connection.QueryAsync<TokenEntity_V1>(
+            new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+        return token.Single();
     }
 
     public async Task<long[]> RemoveToken(TokenQuery query, CancellationToken cancellationToken = default)

@@ -4,7 +4,10 @@ using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Models;
 using VelocipedSite.Requests.V1;
+using VelocipedSite.Requests.V1.Profile;
 using VelocipedSite.Responses.V1;
+using VelocipedSite.Responses.V1.Profile;
+using VelocipedSite.Utilities;
 
 namespace VelocipedSite.Controllers.V1;
 
@@ -28,7 +31,7 @@ public class ProfileController : ControllerBase
         {
             var token = await _profileRepository.GetToken(new TokenQuery
             {
-                Token = request.Token
+                Token = Guid.Parse((ReadOnlySpan<char>)request.Token)
             });
 
             var isValid = DateTime.UtcNow.Subtract(token.ValidUntil).TotalSeconds > 0;
@@ -58,7 +61,7 @@ public class ProfileController : ControllerBase
         {
             var token = await _profileRepository.GetToken(new TokenQuery
             {
-                Token = request.Token
+                Token = Guid.Parse((ReadOnlySpan<char>)request.Token)
             });
 
             var isValid = token.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds > 0;
@@ -99,8 +102,42 @@ public class ProfileController : ControllerBase
         _logger.LogInformation("Invalidating token {Token}", request.Token);
         var ids = await _profileRepository.RemoveToken(new TokenQuery
         {
-            Token = request.Token
+            Token = Guid.Parse((ReadOnlySpan<char>)request.Token)
         });
         _logger.LogInformation("Invalidation succeeded, deleted token with ID {Id}", ids.First());
+    }
+
+    [HttpPost]
+    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Authenticating user with e-mail: {Email}", request.Email);
+            var user = await _profileRepository.GetUserByEmail(new EmailQuery
+            {
+                Email = request.Email
+            });
+
+            var crypt = new PasswordCrypt(user.Password);
+
+            if (!crypt.Verify(request.Password))
+            {
+                _logger.LogInformation("Authentication of user with e-mail {Email} is failed: Password is invalid", request.Email);
+                return new AuthenticateResponse(false, "");
+            }
+
+            var token = await _profileRepository.CreateTokenForUser(new CreateTokenQuery
+            {
+                UserId = user.Id
+            });
+
+            _logger.LogInformation("Authentication of user with e-mail {Email} is succeeded, token: {Token}", request.Email, token.Token);
+            return new AuthenticateResponse(true, token.Token.ToString());
+        }
+        catch (EntityNotFoundException ex)
+        {
+            _logger.LogError("Authentication of user with e-mail {Email} failed: {Message}", request.Email, ex.Message);
+            return new AuthenticateResponse(false, "");
+        }
     }
 }

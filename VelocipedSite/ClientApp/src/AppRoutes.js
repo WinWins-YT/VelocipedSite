@@ -5,6 +5,7 @@ import CatalogCategories from "./components/CatalogCategories";
 import Category from "./components/Category";
 import Cart from "./components/Cart";
 import Profile from "./components/Profile";
+import Login from "./components/Login";
 
 const AppRoutes = [
   {
@@ -30,6 +31,10 @@ const AppRoutes = [
   {
     path: '/profile',
     element: <Profile />
+  },
+  {
+    path: '/login',
+    element: <Login />
   },
   {
     path: '/fetch-data',

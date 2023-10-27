@@ -1,3 +1,3 @@
-﻿namespace VelocipedSite.Requests.V1;
+﻿namespace VelocipedSite.Requests.V1.Profile;
 
 public record InvalidateTokenRequest(string Token);

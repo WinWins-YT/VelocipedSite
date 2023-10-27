@@ -3,7 +3,9 @@ using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Models;
 using VelocipedSite.Requests.V1;
+using VelocipedSite.Requests.V1.Products;
 using VelocipedSite.Responses.V1;
+using VelocipedSite.Responses.V1.Products;
 
 namespace VelocipedSite.Controllers.V1;
 

@@ -2,5 +2,5 @@
 
 public record TokenQuery
 {
-    public string Token { get; init; }
+    public Guid Token { get; init; }
 }
