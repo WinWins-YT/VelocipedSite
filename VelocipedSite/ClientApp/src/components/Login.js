@@ -10,10 +10,10 @@ export default function Login() {
     const loginBtn = useRef(null);
     
     document.title = "Вход в аккаунт";
-
+    
     useEffect(() => {
-        loginBtn.current.disabled = true;
-    }, []);
+        loginBtn.current.disabled = email === "" || password === "";
+    });
     
     async function checkLogin() {
         loginBtn.current.disabled = true;
@@ -49,8 +49,7 @@ export default function Login() {
     
     return (
         <Container
-            className="d-flex justify-content-center align-items-center"
-            style={{height: window.innerHeight / 2}}>
+            className="d-flex justify-content-center align-items-center">
             <Card style={{width: 600}} className="p-5">
                 <h2 className="m-auto">Авторизация</h2>
                 <Form className="d-flex flex-column">
@@ -58,19 +57,13 @@ export default function Login() {
                         className="mt-3"
                         placeholder="Email"
                         value={email}
-                        onChange={e => {
-                            setEmail(e.target.value);
-                            loginBtn.current.disabled = e.target.value === "" || password === "";
-                        }}
+                        onChange={e => setEmail(e.target.value)}
                     />
                     <Form.Control
                         className="mt-3"
                         placeholder="Пароль"
                         value={password}
-                        onChange={e => {
-                            setPassword(e.target.value);
-                            loginBtn.current.disabled = email === "" || e.target.value === "";
-                        }}
+                        onChange={e => setPassword(e.target.value)}
                         type="password"
                     />
                     <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">

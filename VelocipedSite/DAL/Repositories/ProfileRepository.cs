@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using Npgsql;
 using VelocipedSite.DAL.Entities;
 using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
@@ -99,23 +100,33 @@ public class ProfileRepository : BaseRepository, IProfileRepository
 
     public async Task<TokenEntity_V1> CreateTokenForUser(CreateTokenQuery query, CancellationToken cancellationToken = default)
     {
-        const string sqlQuery = """
-                                INSERT INTO tokens (token, user_id, valid_until)
-                                VALUES (gen_random_uuid(), @UserId, @ValidUntil)
-                                RETURNING token;
-                                """;
-
-        var sqlQueryParam = new
+        try
         {
-            UserId = query.UserId,
-            ValidUntil = DateTime.UtcNow.AddDays(7)
-        };
+            const string sqlQuery = """
+                                    INSERT INTO tokens (token, user_id, valid_until)
+                                    VALUES (gen_random_uuid(), @UserId, @ValidUntil)
+                                    RETURNING token;
+                                    """;
 
-        await using var connection = await OpenConnection();
-        var token = await connection.QueryAsync<TokenEntity_V1>(
-            new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+            var sqlQueryParam = new
+            {
+                UserId = query.UserId,
+                ValidUntil = DateTime.UtcNow.AddDays(7)
+            };
 
-        return token.Single();
+            await using var connection = await OpenConnection();
+            var token = await connection.QueryAsync<TokenEntity_V1>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return token.Single();
+        }
+        catch (PostgresException exception)
+        {
+            if (exception.SqlState == PostgresErrorCodes.UniqueViolation)
+                throw new EntityAlreadyExistsException("Token for this user ID is already exists", exception);
+
+            throw;
+        }
     }
 
     public async Task<long[]> RemoveToken(TokenQuery query, CancellationToken cancellationToken = default)
@@ -139,5 +150,54 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             throw new EntityNotFoundException("No token found to invalidate");
 
         return rows;
+    }
+
+    public async Task<long> AddUser(UserQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    INSERT INTO users (email, password, first_name, last_name, address, phone)
+                                    VALUES (@Email, @Password, @FirstName, @LastName, @Address, @Phone)
+                                    RETURNING id;
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                Email = query.Email,
+                Password = query.Password,
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                Address = query.Address,
+                Phone = query.Phone
+            };
+
+            await using var connection = await OpenConnection();
+            var userId = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return userId.Single();
+        }
+        catch (PostgresException exception)
+        {
+            if (exception.SqlState == PostgresErrorCodes.UniqueViolation)
+                throw new EntityAlreadyExistsException("User with this e-mail already exists", exception);
+            
+            throw;
+        }
+    }
+
+    public async Task<long[]> RemoveExpiredTokens(CancellationToken cancellationToken = default)
+    {
+        const string sqlQuery = """
+                                DELETE FROM tokens
+                                WHERE valid_until < current_timestamp;
+                                """;
+
+        await using var connection = await OpenConnection();
+        var ids = await connection.QueryAsync<long>(
+            new CommandDefinition(sqlQuery, cancellationToken: cancellationToken));
+
+        return ids.ToArray();
     }
 }

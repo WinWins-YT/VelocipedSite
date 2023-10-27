@@ -10,7 +10,7 @@ public class AddUsersTable : Migration
     {
         Create.Table("users")
             .WithColumn("id").AsInt64().PrimaryKey("users_pk").Identity()
-            .WithColumn("email").AsString().NotNullable()
+            .WithColumn("email").AsString().NotNullable().Unique()
             .WithColumn("password").AsString().NotNullable()
             .WithColumn("first_name").AsString().NotNullable()
             .WithColumn("last_name").AsString().NotNullable()

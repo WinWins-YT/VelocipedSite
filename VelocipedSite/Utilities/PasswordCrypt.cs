@@ -21,7 +21,12 @@ public sealed class PasswordCrypt
         Array.Copy(salt, 0, Salt = new byte[SaltSize], 0, SaltSize);
         Array.Copy(hash, 0, Hash = new byte[HashSize], 0, HashSize);
     }
-    
+
+    public override string ToString()
+    {
+        return Convert.ToBase64String(ToArray());
+    }
+
     public byte[] ToArray()
     {
         var hashBytes = new byte[SaltSize + HashSize];

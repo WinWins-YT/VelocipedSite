@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using VelocipedSite.ActionFilters;
 using VelocipedSite.DAL.Extensions;
+using VelocipedSite.HostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services
     .AddDalInfrastructure(builder.Configuration)
     .AddDalRepositories();
+builder.Services.AddHostedService<ExpiredTokenCleanerService>();
 
 var app = builder.Build();
 

@@ -3,9 +3,7 @@ using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Models;
-using VelocipedSite.Requests.V1;
 using VelocipedSite.Requests.V1.Profile;
-using VelocipedSite.Responses.V1;
 using VelocipedSite.Responses.V1.Profile;
 using VelocipedSite.Utilities;
 
@@ -59,9 +57,10 @@ public class ProfileController : ControllerBase
     {
         try
         {
+            Guid.TryParse(request.Token, out var guid);
             var token = await _profileRepository.GetToken(new TokenQuery
             {
-                Token = Guid.Parse((ReadOnlySpan<char>)request.Token)
+                Token = guid
             });
 
             var isValid = token.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds > 0;
@@ -118,14 +117,14 @@ public class ProfileController : ControllerBase
                 Email = request.Email
             });
 
-            var crypt = new PasswordCrypt(user.Password);
+            var crypt = new PasswordCrypt(Convert.FromBase64String(user.Password));
 
             if (!crypt.Verify(request.Password))
             {
-                _logger.LogInformation("Authentication of user with e-mail {Email} is failed: Password is invalid", request.Email);
+                _logger.LogError("Authentication of user with e-mail {Email} is failed: Password is invalid", request.Email);
                 return new AuthenticateResponse(false, "");
             }
-
+            
             var token = await _profileRepository.CreateTokenForUser(new CreateTokenQuery
             {
                 UserId = user.Id
@@ -138,6 +137,39 @@ public class ProfileController : ControllerBase
         {
             _logger.LogError("Authentication of user with e-mail {Email} failed: {Message}", request.Email, ex.Message);
             return new AuthenticateResponse(false, "");
+        }
+    }
+
+    [HttpPost]
+    public async Task<RegisterResponse> Register(RegisterRequest request)
+    {
+        _logger.LogInformation("Registering user with Email {Email}", request.Email);
+        try
+        {
+            var crypt = new PasswordCrypt(request.Password);
+            
+            var user = await _profileRepository.AddUser(new UserQuery
+            {
+                Email = request.Email,
+                Address = request.Address,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Password = crypt.ToString(),
+                Phone = request.Phone
+            });
+
+            var token = await _profileRepository.CreateTokenForUser(new CreateTokenQuery
+            {
+                UserId = user
+            });
+
+            _logger.LogInformation("Registration of user {Email} is succeeded, token: {Token}", request.Email, token.Token.ToString());
+            return new RegisterResponse(true, token.Token.ToString(), "");
+        }
+        catch (EntityAlreadyExistsException exception)
+        {
+            _logger.LogError("Registration of user {Email} failed: {Message}", request.Email, exception.Message);
+            return new RegisterResponse(false, "", "Пользователь с таким E-mail уже существует");
         }
     }
 }

@@ -47,7 +47,7 @@ public class ShopsRepository : BaseRepository, IShopsRepository
         }
         catch (InvalidOperationException exception)
         {
-            throw new EntityNotFoundException("No shop found by this ID");
+            throw new EntityNotFoundException("No shop found by this ID", exception);
         }
     }
 }

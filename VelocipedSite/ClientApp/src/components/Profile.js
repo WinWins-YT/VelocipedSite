@@ -36,8 +36,10 @@ export default function Profile() {
             .then(response => response.json())
             .then(json => {
                 //setLoggedIn(json.isValid);
-                if (!json.isValid)
+                if (!json.isValid) {
                     nav("/login");
+                    return;
+                }
                 //setUser(json.user);
                 
                 setFirstName(json.user.firstName);
