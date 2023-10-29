@@ -98,7 +98,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
     }
 
-    public async Task<TokenEntity_V1> CreateTokenForUser(CreateTokenQuery query, CancellationToken cancellationToken = default)
+    public async Task<TokenEntity_V1> CreateTokenForUser(UserIdQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -157,8 +157,8 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         try
         {
             const string sqlQuery = """
-                                    INSERT INTO users (email, password, first_name, last_name, address, phone)
-                                    VALUES (@Email, @Password, @FirstName, @LastName, @Address, @Phone)
+                                    INSERT INTO users (activated, email, password, first_name, last_name, address, phone)
+                                    VALUES (FALSE, @Email, @Password, @FirstName, @LastName, @Address, @Phone)
                                     RETURNING id;
                                     """;
 
@@ -184,6 +184,61 @@ public class ProfileRepository : BaseRepository, IProfileRepository
                 throw new EntityAlreadyExistsException("User with this e-mail already exists", exception);
             
             throw;
+        }
+    }
+
+    public async Task<long> RemoveUser(UserIdQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    DELETE FROM users
+                                    WHERE id=@UserId
+                                    RETURNING id
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                UserId = query.UserId
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException e)
+        {
+            throw new EntityNotFoundException("No user found by this ID", e);
+        }
+    }
+
+    public async Task<long> ActivateUser(UserIdQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    UPDATE users
+                                    SET activated=TRUE
+                                    WHERE id=@Id
+                                    RETURNING id
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                Id = query.UserId
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No user found by this ID", exception);
         }
     }
 

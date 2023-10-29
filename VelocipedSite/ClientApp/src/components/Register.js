@@ -1,6 +1,6 @@
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import InputMask from 'react-input-mask';
 
 export default function Register() {
@@ -15,10 +15,13 @@ export default function Register() {
     const [isFetchError, setIsFetchError] = useState(false);
     const [isFailed, setIsFailed] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [showDialog, setShowDialog] = useState(false);
     
     const regBtn = useRef(null);
     
     const nav = useNavigate();
+    
+    document.title = "Регистрация";
 
     useEffect(() => {
         regBtn.current.disabled =
@@ -32,6 +35,8 @@ export default function Register() {
     
     async function register() {
         regBtn.current.disabled = true;
+        setIsFailed(false);
+        setIsFetchError(false);
         
         try {
             const response = await fetch("/api/v1/Profile/Register", {
@@ -58,14 +63,18 @@ export default function Register() {
                 setErrorMessage(data.errorMessage);
             }
             else {
-                localStorage.setItem("auth_token", data.token);
-                nav('/');
+                setShowDialog(true);
             }
         }
         catch {
             regBtn.current.disabled = false;
             setIsFetchError(true);
         }
+    }
+    
+    function regOK() {
+        setShowDialog(false);
+        nav("/");
     }
     
     return (
@@ -142,6 +151,18 @@ export default function Register() {
                     </Row>
                 </Form>
             </Card>
+            {showDialog && <DialogBox onOK={regOK} /> }
         </Container>
     );
+}
+
+function DialogBox(props) {
+    return (
+        <div className={"fullItem"}>
+            <div>
+                <p>На почту, указанную при регистрации, было отправлено письмо со ссылкой на активацию. Перейдите по ней в течение 7 дней для активации</p>
+                <button onClick={props.onOK} className={"btn btn-success"}>ОК</button>
+            </div>
+        </div>
+    )
 }

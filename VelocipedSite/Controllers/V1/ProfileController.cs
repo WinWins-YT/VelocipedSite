@@ -122,33 +122,40 @@ public class ProfileController : ControllerBase
             if (!crypt.Verify(request.Password))
             {
                 _logger.LogError("Authentication of user with e-mail {Email} is failed: Password is invalid", request.Email);
-                return new AuthenticateResponse(false, "");
+                return new AuthenticateResponse(false, "", "Неправильный пароль, попробуйте еще раз");
+            }
+
+            if (!user.Activated)
+            {
+                _logger.LogError("Authentication of user with e-mail {Email} is failed: Account is not activated", request.Email);
+                return new AuthenticateResponse(false, "", "Аккаунт не активирован. На почту, указанную при регистрации, было отправлено письмо со ссылкой для активации");
             }
             
-            var token = await _profileRepository.CreateTokenForUser(new CreateTokenQuery
+            var token = await _profileRepository.CreateTokenForUser(new UserIdQuery
             {
                 UserId = user.Id
             });
 
             _logger.LogInformation("Authentication of user with e-mail {Email} is succeeded, token: {Token}", request.Email, token.Token);
-            return new AuthenticateResponse(true, token.Token.ToString());
+            return new AuthenticateResponse(true, token.Token.ToString(), "");
         }
         catch (EntityNotFoundException ex)
         {
             _logger.LogError("Authentication of user with e-mail {Email} failed: {Message}", request.Email, ex.Message);
-            return new AuthenticateResponse(false, "");
+            return new AuthenticateResponse(false, "", "Неправильный E-mail, попробуйте еще раз. Если у вас нет аккаунта, воспользуйтесь кнопкой Регистрация");
         }
     }
 
     [HttpPost]
     public async Task<RegisterResponse> Register(RegisterRequest request)
     {
-        _logger.LogInformation("Registering user with Email {Email}", request.Email);
+        _logger.LogInformation("Registering user with Email {Email}...", request.Email);
+        long user = -1;
         try
         {
             var crypt = new PasswordCrypt(request.Password);
-            
-            var user = await _profileRepository.AddUser(new UserQuery
+
+            user = await _profileRepository.AddUser(new UserQuery
             {
                 Email = request.Email,
                 Address = request.Address,
@@ -158,18 +165,58 @@ public class ProfileController : ControllerBase
                 Phone = request.Phone
             });
 
-            var token = await _profileRepository.CreateTokenForUser(new CreateTokenQuery
+            var token = await _profileRepository.CreateTokenForUser(new UserIdQuery
             {
                 UserId = user
             });
 
-            _logger.LogInformation("Registration of user {Email} is succeeded, token: {Token}", request.Email, token.Token.ToString());
-            return new RegisterResponse(true, token.Token.ToString(), "");
+            _logger.LogInformation(
+                "Registration of user {Email} is succeeded, token: {Token}, sending activation mail...", request.Email,
+                token.Token.ToString());
+            await Mail.SendActivationEmail(request.Email, token.Token.ToString());
+
+            _logger.LogInformation("Registration of user {Email} is succeeded, mail sent", request.Email);
+            return new RegisterResponse(true, "");
         }
         catch (EntityAlreadyExistsException exception)
         {
             _logger.LogError("Registration of user {Email} failed: {Message}", request.Email, exception.Message);
-            return new RegisterResponse(false, "", "Пользователь с таким E-mail уже существует");
+            return new RegisterResponse(false, "Пользователь с таким E-mail уже существует");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Unhandled exception: {Exception}", ex.Message);
+            await _profileRepository.RemoveUser(new UserIdQuery
+            {
+                UserId = user
+            });
+            return new RegisterResponse(false, "Че-то сломалось, ща починим");
+        }
+    }
+
+    [HttpGet("{token}")]
+    public async Task<string> Activation(string token)
+    {
+        try
+        {
+            _logger.LogInformation("Activating user from token {Token}", token);
+            Guid.TryParse(token, out var guid);
+            var user = await _profileRepository.GetUserFromToken(new TokenQuery
+            {
+                Token = guid
+            });
+
+            await _profileRepository.ActivateUser(new UserIdQuery
+            {
+                UserId = user.Id
+            });
+
+            return "Активация успешна. Вы можете входить в аккаунт.";
+        }
+        catch (EntityNotFoundException exception)
+        {
+            _logger.LogError("Activation of user with token {Token} is failed, {Message}", exception.Message);
+            return "Активация пользователя не удалась. Сообщение об ошибке: " + exception.Message;
         }
     }
 }

@@ -1,3 +1,3 @@
 ﻿namespace VelocipedSite.Responses.V1.Profile;
 
-public record AuthenticateResponse(bool IsSuccess, string Token);
+public record AuthenticateResponse(bool IsSuccess, string Token, string ErrorMessage);

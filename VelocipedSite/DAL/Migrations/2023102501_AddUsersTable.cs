@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VelocipedSite.DAL.Migrations;
@@ -10,6 +11,7 @@ public class AddUsersTable : Migration
     {
         Create.Table("users")
             .WithColumn("id").AsInt64().PrimaryKey("users_pk").Identity()
+            .WithColumn("activated").AsBoolean().NotNullable()
             .WithColumn("email").AsString().NotNullable().Unique()
             .WithColumn("password").AsString().NotNullable()
             .WithColumn("first_name").AsString().NotNullable()
@@ -20,7 +22,7 @@ public class AddUsersTable : Migration
         Create.Table("tokens")
             .WithColumn("id").AsInt64().PrimaryKey("tokens_pk").Identity()
             .WithColumn("token").AsGuid().NotNullable()
-            .WithColumn("user_id").AsInt64().NotNullable().Unique()
+            .WithColumn("user_id").AsInt64().NotNullable()
             .WithColumn("valid_until").AsDateTime().NotNullable();
 
         Create.Table("orders")
@@ -33,11 +35,13 @@ public class AddUsersTable : Migration
 
         Create.ForeignKey("tokens_user_id_fk")
             .FromTable("tokens").ForeignColumn("user_id")
-            .ToTable("users").PrimaryColumn("id");
+            .ToTable("users").PrimaryColumn("id")
+            .OnDelete(Rule.Cascade);
 
         Create.ForeignKey("orders_user_id_fk")
             .FromTable("orders").ForeignColumn("user_id")
-            .ToTable("users").PrimaryColumn("id");
+            .ToTable("users").PrimaryColumn("id")
+            .OnDelete(Rule.Cascade);
     }
 
     public override void Down()

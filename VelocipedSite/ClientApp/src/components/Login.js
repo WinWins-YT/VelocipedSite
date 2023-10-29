@@ -7,6 +7,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [isFetchError, setIsFetchError] = useState(false);
     const [isFailed, setIsFailed] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const loginBtn = useRef(null);
     
     document.title = "Вход в аккаунт";
@@ -35,6 +36,7 @@ export default function Login() {
             if (!data.isSuccess) {
                 loginBtn.current.disabled = false;
                 setIsFailed(true);
+                setErrorMessage(data.errorMessage);
             }
             else {
                 localStorage.setItem("auth_token", data.token);
@@ -73,7 +75,7 @@ export default function Login() {
                         <Link className={"d-flex justify-content-center align-self-center"} to={"/register"}>Регистрация</Link>
                         <p className={"d-flex justify-content-center align-self-center"} style={{color: "red", textAlign: "center"}}>
                             {isFetchError ? "Произошла техническая ошибка. Пожалуйста попробуйте позднее" : ""}
-                            {isFailed ? "Неправильный E-mail или пароль, попробуйте еще раз. Если у вас нет аккаунта, воспользуйтесь кнопкой Регистрация" : ""}
+                            {isFailed ? errorMessage : ""}
                         </p>
                     </Row>
                 </Form>

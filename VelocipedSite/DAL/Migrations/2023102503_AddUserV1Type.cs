@@ -14,6 +14,7 @@ public class AddUserV1Type : Migration
                                             CREATE TYPE user_v1 AS
                                             (
                                                 id              bigint,
+                                                activated       boolean,
                                                 email           text,
                                                 password        text,
                                                 first_name      text,

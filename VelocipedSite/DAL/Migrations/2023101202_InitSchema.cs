@@ -38,15 +38,18 @@ public class InitSchema : Migration
 
         Create.ForeignKey("categories_shop_id_fk")
             .FromTable("categories").ForeignColumn("shop_id")
-            .ToTable("shops").PrimaryColumn("shop_id");
+            .ToTable("shops").PrimaryColumn("shop_id")
+            .OnDelete(Rule.Cascade);
         
         Create.ForeignKey("products_shop_id_fk")
             .FromTable("products").ForeignColumn("shop_id")
-            .ToTable("shops").PrimaryColumn("shop_id");
+            .ToTable("shops").PrimaryColumn("shop_id")
+            .OnDelete(Rule.Cascade);
         
         Create.ForeignKey("products_category_id_fk")
             .FromTable("products").ForeignColumn("category_id")
-            .ToTable("categories").PrimaryColumn("id");
+            .ToTable("categories").PrimaryColumn("id")
+            .OnDelete(Rule.Cascade);
     }
 
     public override void Down()
