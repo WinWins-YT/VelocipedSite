@@ -219,4 +219,10 @@ public class ProfileController : ControllerBase
             return "Активация пользователя не удалась. Сообщение об ошибке: " + exception.Message;
         }
     }
+
+    [HttpPost]
+    public async Task ChangeUser(ChangeUserRequest request)
+    {
+        
+    }
 }

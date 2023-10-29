@@ -3,7 +3,7 @@ using MimeKit;
 
 namespace VelocipedSite.Utilities;
 
-public class Mail
+public static class Mail
 {
     private static async Task SendMessage(string email, string subject, string text)
     {
@@ -19,7 +19,7 @@ public class Mail
 
         using var client = new SmtpClient();
         await client.ConnectAsync("smtp.mail.ru", 465, true);
-        await client.AuthenticateAsync("info@velociped.ru", "-");
+        await client.AuthenticateAsync("info@velociped.ru", "MyLcTW2VheK8SL3ydGwe");
         await client.SendAsync(emailMessage);
  
         await client.DisconnectAsync(true);

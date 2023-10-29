@@ -65,6 +65,10 @@ export default function Profile() {
         nav('/login');
     }
     
+    async function saveChanges() {
+        
+    }
+    
     return (
         <Container
             className="d-flex justify-content-center align-items-center">
@@ -82,6 +86,7 @@ export default function Profile() {
                 <Form.Group className="mb-3" controlId="userForm.emailControl">
                     <Form.Label>E-Mail</Form.Label>
                     <Form.Control value={email}
+                                  disabled={true}
                                   type={"email"}
                                   onChange={e => setEmail(e.target.value)} />
                 </Form.Group>
@@ -96,7 +101,7 @@ export default function Profile() {
                                   onChange={e => setPhone(e.target.value)} />
                 </Form.Group>
                 <Form.Group style={{marginBottom: "16px"}}>
-                    <Button variant={"success"}>Сохранить изменения</Button>
+                    <Button variant={"success"} onClick={saveChanges}>Сохранить изменения</Button>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Button style={{marginRight: "8px"}} variant={"outline-primary"}>Сменить пароль</Button>
