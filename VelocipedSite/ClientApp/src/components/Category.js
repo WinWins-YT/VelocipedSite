@@ -110,7 +110,7 @@ export default function Category()
                 {
                     products.map(x =>
                         <div className={"col-md-4 justify-center align-items-center categoryBanner"}>
-                            <Link to={"/product?shop=" + shopId + "&id=" + x.id}>
+                            <Link to={"/product?shop=" + shopId + "&catalog=" + id + "&id=" + x.id}>
                                 <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
                             </Link>
                             <p>{x.name}</p>

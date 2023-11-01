@@ -96,3 +96,8 @@ code {
   background: #F5F5DC;
   border-radius: 15px;
 }
+
+.productDetails {
+  border-radius: 10px;
+  width: 400px;
+}

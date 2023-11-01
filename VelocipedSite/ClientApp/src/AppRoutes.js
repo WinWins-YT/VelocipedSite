@@ -7,6 +7,7 @@ import Cart from "./components/Cart";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Product from "./components/Product";
 
 const AppRoutes = [
   {
@@ -40,6 +41,10 @@ const AppRoutes = [
   {
     path: '/register',
     element: <Register />
+  },
+  {
+    path: '/product',
+    element: <Product />
   },
   {
     path: '/fetch-data',
