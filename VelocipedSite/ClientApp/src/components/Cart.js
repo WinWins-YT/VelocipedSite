@@ -86,7 +86,6 @@ export default function Cart() {
     }
     
     const sum = cart.reduce((partialSum, a) => partialSum + ((a.isOnSale ? a.salePrice : a.price) * a.quantity), 0) + shop.deliveryPrice;
-    console.log(shop);
     
     return (
         <div>

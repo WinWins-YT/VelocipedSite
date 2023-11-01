@@ -8,6 +8,7 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Product from "./components/Product";
+import Checkout from "./components/Checkout";
 
 const AppRoutes = [
   {
@@ -45,6 +46,10 @@ const AppRoutes = [
   {
     path: '/product',
     element: <Product />
+  },
+  {
+    path: '/checkout',
+    element: <Checkout />
   },
   {
     path: '/fetch-data',
