@@ -35,4 +35,16 @@ public static class Mail
 
         await SendMessage(email, "Активация учетной записи", mailBody);
     }
+
+    public static async Task SendForgotPasswordEmail(string email, string newPassword)
+    {
+        var mailBody = $"""
+                        <h3>Сброс пароля</h3>
+                        <p>Здравствуйте, вы запросили сброс пароля для аккаунта на сайте Велосипед</p>
+                        <p>Ваш новый пароль: <b>{newPassword}</b></p>
+                        <p>Теперь в ваш аккаунт будет происходить с этим паролем. При необходимости, его можно поменять в настройках профиля</p>
+                        """;
+
+        await SendMessage(email, "Сброс пароля", mailBody);
+    }
 }

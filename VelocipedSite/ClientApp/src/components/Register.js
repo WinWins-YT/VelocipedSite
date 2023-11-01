@@ -29,7 +29,7 @@ export default function Register() {
             (password1 !== password2 && password1 !== "" && password2 !== "") ||
             !/^[А-яA-z]+$/g.test(firstName) ||
             !/^[А-яA-z]+$/g.test(lastName) ||
-            !/^[A-zА-я-.,/\\ ]+$/g.test(address) ||
+            !/^[A-zА-я-.,/\\0-9 ]+$/g.test(address) ||
             !/^\+7 \(\d{3}\) \d{3} \d{2} \d{2}/g.test(phone);
     });
     

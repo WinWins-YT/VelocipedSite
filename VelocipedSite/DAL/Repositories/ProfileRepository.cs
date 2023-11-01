@@ -242,6 +242,68 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
     }
 
+    public async Task<long> UpdateUser(UpdateUserQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+
+            const string sqlQuery = """
+                                    UPDATE users
+                                    SET first_name = @FirstName, last_name = @LastName, address = @Address, phone = @Phone
+                                    WHERE id = @Id
+                                    RETURNING id;
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                Address = query.Address,
+                Phone = query.Phone,
+                Id = query.UserId
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No user found this ID", exception);
+        }
+    }
+
+    public async Task<long> ChangeUserPassword(ChangePasswordQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    UPDATE users
+                                    SET password = @Password
+                                    WHERE id=@UserId
+                                    RETURNING id;
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                Password = query.Password,
+                UserId = query.UserId
+            };
+
+            await using var connection = await OpenConnection();
+            var user = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return user.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No user found by this ID", exception);
+        }
+    }
+
     public async Task<long[]> RemoveExpiredTokens(CancellationToken cancellationToken = default)
     {
         const string sqlQuery = """

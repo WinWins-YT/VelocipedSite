@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace VelocipedSite.Utilities;
 
@@ -43,9 +44,17 @@ public sealed class PasswordCrypt
     {
         var test = new Rfc2898DeriveBytes(password, Salt, HashIter, HashAlgorithmName.SHA256).GetBytes(HashSize);
         return test.SequenceEqual(Hash);
-        // for (var i = 0; i < HashSize; i++)
-        //     if (test[i] != Hash[i])
-        //         return false;
-        // return true;
+    }
+
+    public static string GeneratePassword(int length)
+    {
+        const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder res = new StringBuilder();
+        Random rnd = new Random();
+        while (0 < length--)
+        {
+            res.Append(valid[rnd.Next(valid.Length)]);
+        }
+        return res.ToString();
     }
 }

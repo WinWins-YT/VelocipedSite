@@ -199,7 +199,7 @@ public class ProfileController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Activating user from token {Token}", token);
+            _logger.LogInformation("Activating user with token {Token}...", token);
             Guid.TryParse(token, out var guid);
             var user = await _profileRepository.GetUserFromToken(new TokenQuery
             {
@@ -211,6 +211,7 @@ public class ProfileController : ControllerBase
                 UserId = user.Id
             });
 
+            _logger.LogInformation("User with token {Token} is activated", token);
             return "Активация успешна. Вы можете входить в аккаунт.";
         }
         catch (EntityNotFoundException exception)
@@ -221,8 +222,103 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPost]
-    public async Task ChangeUser(ChangeUserRequest request)
+    public async Task<ChangeUserPasswordResponse> ChangeUserPassword(ChangeUserPasswordRequest request)
     {
-        
+        try
+        {
+            _logger.LogInformation("Changing password for user {Token}...", request.Token);
+            var crypt = new PasswordCrypt(request.NewPassword);
+            Guid.TryParse(request.Token, out var guid);
+            var user = await _profileRepository.GetUserFromToken(new TokenQuery
+            {
+                Token = guid
+            });
+
+            var oldCrypt = new PasswordCrypt(Convert.FromBase64String(user.Password));
+
+            if (!oldCrypt.Verify(request.OldPassword))
+            {
+                _logger.LogError("Changing password for user {Token} is failed: Wrong old password", request.Token);
+                return new ChangeUserPasswordResponse(false, "Старый пароль введен неверно, попробуйте еще раз");
+            }
+
+            var id = await _profileRepository.ChangeUserPassword(new ChangePasswordQuery
+            {
+                UserId = user.Id,
+                Password = crypt.ToString()
+            });
+
+            _logger.LogInformation("Password changed for user {Token}", request.Token);
+            return new ChangeUserPasswordResponse(true, "");
+        }
+        catch (EntityNotFoundException exception)
+        {
+            _logger.LogError("Changing password of user with token {Token} is failed: {Message}", request.Token, exception.Message);
+            return new ChangeUserPasswordResponse(false, "Смена пароля не удалась: " + exception.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<UpdateUserResponse> UpdateUser(UpdateUserRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Updating password for user {Token}...", request.Token);
+            Guid.TryParse(request.Token, out var guid);
+            var user = await _profileRepository.GetUserFromToken(new TokenQuery
+            {
+                Token = guid
+            });
+
+            var id = await _profileRepository.UpdateUser(new UpdateUserQuery
+            {
+                Address = request.Address,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Phone = request.Phone,
+                UserId = user.Id
+            });
+
+            _logger.LogInformation("User with token {Token} is updated", request.Token);
+            return new UpdateUserResponse(true, "");
+        }
+        catch (EntityNotFoundException exception)
+        {
+            _logger.LogError("Updating user with token {Token} is failed: {Message}", request.Token, exception.Message);
+            return new UpdateUserResponse(false, "Обновление данных не удалось: " + exception.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<ForgotPasswordResponse> ForgotPassword(ForgotPasswordRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("User {Email} forgot password, generating...", request.Email);
+            var newPassword = PasswordCrypt.GeneratePassword(8);
+            var crypt = new PasswordCrypt(newPassword);
+            var user = await _profileRepository.GetUserByEmail(new EmailQuery
+            {
+                Email = request.Email
+            });
+
+            var id = await _profileRepository.ChangeUserPassword(new ChangePasswordQuery
+            {
+                UserId = user.Id,
+                Password = crypt.ToString()
+            });
+
+            _logger.LogInformation("Changed forgotten password for user {Email}, sending mail...", request.Email);
+            await Mail.SendForgotPasswordEmail(request.Email, newPassword);
+
+            _logger.LogInformation("Changed forgotten password for user {Email}, mail sent", request.Email);
+            return new ForgotPasswordResponse(true, "");
+        }
+        catch (EntityNotFoundException e)
+        {
+            _logger.LogError("Changing forgotten password for user {Email} is failed: {Message}", request.Email, e.Message);
+            return new ForgotPasswordResponse(false,
+                "Такого E-Mail не существует. Если у вас нет аккаунта, попробуйте зарегистрироваться");
+        }
     }
 }

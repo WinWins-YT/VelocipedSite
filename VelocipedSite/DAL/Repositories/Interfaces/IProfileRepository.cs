@@ -14,5 +14,7 @@ public interface IProfileRepository
     Task<long> AddUser(UserQuery query, CancellationToken cancellationToken = default);
     Task<long> RemoveUser(UserIdQuery query, CancellationToken cancellationToken = default);
     Task<long> ActivateUser(UserIdQuery query, CancellationToken cancellationToken = default);
+    Task<long> UpdateUser(UpdateUserQuery query, CancellationToken cancellationToken = default);
+    Task<long> ChangeUserPassword(ChangePasswordQuery query, CancellationToken cancellationToken = default);
     Task<long[]> RemoveExpiredTokens(CancellationToken cancellationToken = default);
 }

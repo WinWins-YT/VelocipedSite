@@ -51,7 +51,7 @@ export default function CatalogCategories() {
             <div className={"col-md-4 d-flex align-items-center"}>
                 <Link className={"categoryBanner"} to={"/category?shop=" + shopId + "&id=" + x.id}>
                     <div>
-                        <img src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
+                        <img className={"align-items-center align-self-center justify-center"} src={"images/products/" + shopId + "/" + x.pathToImg} alt={""}/>
                         <p>{x.name}</p>
                     </div>
                 </Link>
