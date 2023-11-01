@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Container, Form} from "react-bootstrap";
 import InputMask from "react-input-mask";
 
@@ -14,6 +14,8 @@ export default function Checkout() {
 
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
+    const [orderId, setOrderId] = useState(-1);
+    const sendForm = useRef(null);
 
     useEffect(() => {
         getUser(token);
@@ -83,11 +85,13 @@ export default function Checkout() {
         })));
     }
     
+    let sum = cart.reduce((partialSum, a) => partialSum + ((a.isOnSale ? a.salePrice : a.price) * a.quantity), 0) + shop.deliveryPrice;
+    
     async function pay()  {
-        
+        setOrderId(20);
+        console.log(orderId);
+        sendForm.submit();
     }
-
-    const sum = cart.reduce((partialSum, a) => partialSum + ((a.isOnSale ? a.salePrice : a.price) * a.quantity), 0) + shop.deliveryPrice;
     
     return (
         <Container>
@@ -98,7 +102,12 @@ export default function Checkout() {
                 <p style={{color: "red", fontWeight: "bold"}}>Чтобы продолжить оформление, войдите в аккаунт или зарегистрируйтесь</p> :
 
                 <>
-                    <Form>
+                    <Form ref={sendForm} method="POST" action="https://yoomoney.ru/quickpay/confirm">
+                        <input type="hidden" name="receiver" value="4100118425939443"/>
+                        <input type="hidden" name="label" value={orderId}/>
+                        <input type="hidden" name="quickpay-form" value="button"/>
+                        <input type="hidden" name="sum" value={sum} datatype="number"/>
+                        <input type="hidden" name="paymentType" value="AC"/>
                         <Form.Group className="mb-3" controlId="userForm.addressControl">
                             <Form.Label>Адрес</Form.Label>
                             <Form.Control value={address}
@@ -112,9 +121,9 @@ export default function Checkout() {
                                 value={phone}
                                 onChange={e => setPhone(e.target.value)} />
                         </Form.Group>
+                        <h3>Итого к оплате: {sum} руб.</h3>
+                        <button onClick={pay} className="btn btn-success">Оплатить</button>
                     </Form>
-                    <h3>Итого к оплате: {sum} руб.</h3>
-                    <button onClick={pay} className="btn btn-success">Оплатить</button>
                 </>
             }
         </Container>

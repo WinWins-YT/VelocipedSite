@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using Npgsql.NameTranslation;
 using VelocipedSite.DAL.Entities;
+using VelocipedSite.DAL.Enums;
 using VelocipedSite.DAL.Settings;
 
 namespace VelocipedSite.DAL.Infrastructure;
@@ -22,6 +23,7 @@ public class Postgres
         dataSourceBuilder.MapComposite<CatalogEntity_V1>("catalog_v1", Translator);
         dataSourceBuilder.MapComposite<ProductEntity_V1>("product_v1", Translator);
         dataSourceBuilder.MapComposite<TokenEntity_V1>("token_v1", Translator);
+        dataSourceBuilder.MapComposite<OrderStatus>("order_status", Translator);
 
         DataSource = dataSourceBuilder.Build();
     }

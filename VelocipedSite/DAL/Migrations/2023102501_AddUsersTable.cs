@@ -25,21 +25,8 @@ public class AddUsersTable : Migration
             .WithColumn("user_id").AsInt64().NotNullable()
             .WithColumn("valid_until").AsDateTime().NotNullable();
 
-        Create.Table("orders")
-            .WithColumn("id").AsInt64().PrimaryKey("orders_pk").Identity()
-            .WithColumn("user_id").AsInt64().NotNullable()
-            .WithColumn("date").AsDateTime().NotNullable()
-            .WithColumn("address").AsString().NotNullable()
-            .WithColumn("phone").AsString().NotNullable()
-            .WithColumn("products").AsCustom("product_v1[]").NotNullable();
-
         Create.ForeignKey("tokens_user_id_fk")
             .FromTable("tokens").ForeignColumn("user_id")
-            .ToTable("users").PrimaryColumn("id")
-            .OnDelete(Rule.Cascade);
-
-        Create.ForeignKey("orders_user_id_fk")
-            .FromTable("orders").ForeignColumn("user_id")
             .ToTable("users").PrimaryColumn("id")
             .OnDelete(Rule.Cascade);
     }
@@ -50,6 +37,5 @@ public class AddUsersTable : Migration
         Delete.Table("tokens");
         
         Delete.ForeignKey("tokens_user_id_fk");
-        Delete.ForeignKey("orders_user_id_fk");
     }
 }
