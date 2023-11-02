@@ -1,6 +1,6 @@
 ﻿namespace VelocipedSite.DAL.Entities;
 
-public record UserEntity_V1
+public record UserEntityV1
 {
     public long Id { get; init; }
     public bool Activated { get; init; }

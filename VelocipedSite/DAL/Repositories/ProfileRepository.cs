@@ -19,7 +19,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
     {
     }
 
-    public async Task<TokenEntity_V1> GetToken(TokenQuery query, CancellationToken cancellationToken = default)
+    public async Task<TokenEntityV1> GetToken(TokenQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -34,7 +34,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             };
 
             await using var connection = await OpenConnection();
-            var token = await connection.QueryAsync<TokenEntity_V1>(
+            var token = await connection.QueryAsync<TokenEntityV1>(
                 new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: cancellationToken));
 
             return token.Single();
@@ -45,7 +45,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
     }
 
-    public async Task<UserEntity_V1> GetUserFromToken(TokenQuery query, CancellationToken cancellationToken = default)
+    public async Task<UserEntityV1> GetUserFromToken(TokenQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -61,7 +61,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             };
 
             await using var connection = await OpenConnection();
-            var user = await connection.QueryAsync<UserEntity_V1>(
+            var user = await connection.QueryAsync<UserEntityV1>(
                 new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
 
             return user.Single();
@@ -72,7 +72,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
     }
 
-    public async Task<UserEntity_V1> GetUserByEmail(EmailQuery query, CancellationToken cancellationToken = default)
+    public async Task<UserEntityV1> GetUserByEmail(EmailQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -87,7 +87,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             };
 
             await using var connection = await OpenConnection();
-            var user = await connection.QueryAsync<UserEntity_V1>(
+            var user = await connection.QueryAsync<UserEntityV1>(
                 new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
 
             return user.Single();
@@ -98,7 +98,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
         }
     }
 
-    public async Task<TokenEntity_V1> CreateTokenForUser(UserIdQuery query, CancellationToken cancellationToken = default)
+    public async Task<TokenEntityV1> CreateTokenForUser(UserIdQuery query, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -115,7 +115,7 @@ public class ProfileRepository : BaseRepository, IProfileRepository
             };
 
             await using var connection = await OpenConnection();
-            var token = await connection.QueryAsync<TokenEntity_V1>(
+            var token = await connection.QueryAsync<TokenEntityV1>(
                 new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
 
             return token.Single();

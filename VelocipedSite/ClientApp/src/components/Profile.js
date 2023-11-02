@@ -159,6 +159,7 @@ export default function Profile() {
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Button style={{marginRight: "8px"}} onClick={() => setChangePass(true)} variant={"outline-primary"}>Сменить пароль</Button>
+                    <Button style={{marginRight: "8px"}} onClick={() => nav('/order-history')} variant={"outline-primary"}>История заказов</Button>
                     <Button style={{marginRight: "8px"}} onClick={logout} variant={"outline-danger"}>Выйти из аккаунта</Button>
                 </Form.Group>
             </Form>

@@ -16,7 +16,8 @@ public class AddOrderStatusEnum : Migration
                                                 'created',
                                                 'payed',
                                                 'delivering',
-                                                'completed'
+                                                'completed',
+                                                'cancelled'
                                             );
                                         END IF;
                                     END

@@ -11,7 +11,7 @@ namespace VelocipedSite.DAL.Infrastructure;
 public class Postgres
 {
     public static NpgsqlDataSource DataSource { get; private set; }
-    private static readonly NpgsqlSnakeCaseNameTranslator Translator = new NpgsqlSnakeCaseNameTranslator();
+    private static readonly NpgsqlSnakeCaseNameTranslator Translator = new();
 
     public static void MapCompositeTypes(IServiceCollection services)
     {
@@ -19,11 +19,13 @@ public class Postgres
         
         var cfg = services.BuildServiceProvider().GetRequiredService<IOptions<DalOptions>>();
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(cfg.Value.ConnectionString);
-        dataSourceBuilder.MapComposite<ShopEntity_V1>("shop_v1", Translator);
-        dataSourceBuilder.MapComposite<CatalogEntity_V1>("catalog_v1", Translator);
-        dataSourceBuilder.MapComposite<ProductEntity_V1>("product_v1", Translator);
-        dataSourceBuilder.MapComposite<TokenEntity_V1>("token_v1", Translator);
-        dataSourceBuilder.MapComposite<OrderStatus>("order_status", Translator);
+        dataSourceBuilder.MapComposite<ShopEntityV1>("shop_v1", Translator);
+        dataSourceBuilder.MapComposite<CatalogEntityV1>("catalog_v1", Translator);
+        dataSourceBuilder.MapComposite<ProductEntityV1>("product_v1", Translator);
+        dataSourceBuilder.MapComposite<TokenEntityV1>("token_v1", Translator);
+        dataSourceBuilder.MapEnum<OrderStatus>("order_status", Translator);
+        dataSourceBuilder.MapComposite<OrderEntityV1>("order_v1", Translator);
+        dataSourceBuilder.MapComposite<PromocodeEntityV1>("promocode_v1", Translator);
 
         DataSource = dataSourceBuilder.Build();
     }

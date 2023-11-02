@@ -14,7 +14,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
     {
     }
 
-    public async Task<ProductEntity_V1[]> Query(ProductsQueryModel query, CancellationToken token = default)
+    public async Task<ProductEntityV1[]> Query(ProductsQueryModel query, CancellationToken token = default)
     {
         const string sqlQuery = """
                                 SELECT * FROM products
@@ -28,7 +28,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         };
 
         await using var connection = await OpenConnection();
-        var products = (await connection.QueryAsync<ProductEntity_V1>(
+        var products = (await connection.QueryAsync<ProductEntityV1>(
             new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token))).ToArray();
 
         if (products.Length == 0)
@@ -36,7 +36,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         return products;
     }
 
-    public async Task<ProductEntity_V1> QueryById(ProductQueryByIdModel query, CancellationToken token = default)
+    public async Task<ProductEntityV1> QueryById(ProductQueryByIdModel query, CancellationToken token = default)
     {
         const string sqlQuery = """
                                 SELECT * FROM products
@@ -51,7 +51,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         };
 
         await using var connection = await OpenConnection();
-        var product = await connection.QueryAsync<ProductEntity_V1>(
+        var product = await connection.QueryAsync<ProductEntityV1>(
             new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
 
         return product.Single();

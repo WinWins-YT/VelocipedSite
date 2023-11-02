@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Product from "./components/Product";
 import Checkout from "./components/Checkout";
+import OrderHistory from "./components/OrderHistory";
 
 const AppRoutes = [
   {
@@ -50,6 +51,10 @@ const AppRoutes = [
   {
     path: '/checkout',
     element: <Checkout />
+  },
+  {
+    path: '/order-history',
+    element: <OrderHistory />
   },
   {
     path: '/fetch-data',

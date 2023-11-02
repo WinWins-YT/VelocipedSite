@@ -15,7 +15,9 @@ public class AddOrdersTable : Migration
             .WithColumn("date").AsDateTime().NotNullable()
             .WithColumn("address").AsString().NotNullable()
             .WithColumn("phone").AsString().NotNullable()
-            .WithColumn("products").AsCustom("product_v1[]").NotNullable();
+            .WithColumn("products").AsCustom("product_v1[]").NotNullable()
+            .WithColumn("total_price").AsDecimal().NotNullable()
+            .WithColumn("sale_value").AsDecimal().Nullable();
         
         Create.ForeignKey("orders_user_id_fk")
             .FromTable("orders").ForeignColumn("user_id")

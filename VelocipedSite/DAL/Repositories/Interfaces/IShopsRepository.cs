@@ -5,6 +5,6 @@ namespace VelocipedSite.DAL.Repositories.Interfaces;
 
 public interface IShopsRepository : IDbRepository
 {
-    Task<ShopEntity_V1[]> QueryAll(CancellationToken token = default);
-    Task<ShopEntity_V1> QueryById(ShopsQueryModel query, CancellationToken token = default);
+    Task<ShopEntityV1[]> QueryAll(CancellationToken token = default);
+    Task<ShopEntityV1> QueryById(ShopsQueryModel query, CancellationToken token = default);
 }

@@ -14,7 +14,7 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
     {
     }
 
-    public async Task<CatalogEntity_V1[]> Query(CatalogQueryModel query, CancellationToken token = default)
+    public async Task<CatalogEntityV1[]> Query(CatalogQueryModel query, CancellationToken token = default)
     {
         const string sqlQuery = """
                                 SELECT id, shop_id, name, path_to_img FROM categories
@@ -27,7 +27,7 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
         };
 
         await using var connection = await OpenConnection();
-        var categories = (await connection.QueryAsync<CatalogEntity_V1>(
+        var categories = (await connection.QueryAsync<CatalogEntityV1>(
             new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token))).ToArray();
 
         if (categories.Length == 0)
@@ -35,7 +35,7 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
         return categories;
     }
 
-    public async Task<CatalogEntity_V1> QueryById(CatalogQueryModel query, CancellationToken token = default)
+    public async Task<CatalogEntityV1> QueryById(CatalogQueryModel query, CancellationToken token = default)
     {
         try
         {
@@ -51,7 +51,7 @@ public class CatalogRepository : BaseRepository, ICatalogRepository
             };
 
             await using var connection = await OpenConnection();
-            var category = await connection.QueryAsync<CatalogEntity_V1>(
+            var category = await connection.QueryAsync<CatalogEntityV1>(
                 new CommandDefinition(sqlQuery, sqlQueryParams, cancellationToken: token));
 
             return category.Single();
