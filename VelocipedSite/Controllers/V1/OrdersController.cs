@@ -116,4 +116,52 @@ public class OrdersController : ControllerBase
             return new CancelOrderResponse();
         }
     }
+
+    [HttpPost]
+    [Consumes("application/x-www-form-urlencoded")]
+    public async Task<IActionResult> YooMoneyConfirm([FromForm] YooMoneyConfirmRequest request)
+    {
+        var appRoot = @"D:\test";
+        try
+        {
+            _logger.LogInformation("Yoo money confirming order {OrderId} for {Amount}", request.Label, request.Withdraw_amount);
+            await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", $"Got POST for confirm: Label: {request.Label}, Amount: {request.Withdraw_amount}\n");
+            
+            var orderId = Convert.ToInt64(request.Label);
+            var sum = Convert.ToDecimal(request.Withdraw_amount);
+
+            var order = await _ordersRepository.GetOrderById(new OrderIdQuery
+            {
+                OrderId = orderId
+            });
+
+            await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", $"Order sum: {order.TotalPrice}\n");
+            if (sum == order.TotalPrice)
+            {
+                await _ordersRepository.ConfirmOrderPayed(new OrderIdQuery
+                {
+                    OrderId = orderId
+                });
+                await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", "Order confirmed\n");
+                _logger.LogInformation("Order {OrderId} for {Amount} is confirmed", orderId, request.Withdraw_amount);
+                return Ok();
+            }
+            
+            await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", "Sum mismatch\n");
+            _logger.LogError("Confirming order {OrderId} is failed: Sum mismatch", request.Withdraw_amount);
+            return BadRequest();
+        }
+        catch (EntityNotFoundException exception)
+        {
+            await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", $"Not found error: {exception}\n");
+            _logger.LogError("Confirming order {OrderId} is failed: {Message}", request.Withdraw_amount, exception.Message);
+            return NotFound(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            await System.IO.File.AppendAllTextAsync(appRoot + @"\yoomoney.txt", $"Error: {exception}\n");
+            _logger.LogError("Confirming order {OrderId} is failed: Internal Error, {Message}", request.Withdraw_amount, exception);
+            return StatusCode(500, exception.Message);
+        }
+    }
 }

@@ -17,6 +17,16 @@ code {
   border-color: #1861ac;
 }
 
+.warning {
+  background: lightcoral;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.helpContainer {
+  font-size: 20px;
+}
+
 .shopBannerContainer {
   width: 300px;
   height: 300px;

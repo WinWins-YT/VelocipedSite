@@ -1,5 +1,3 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import CatalogCategories from "./components/CatalogCategories";
 import Category from "./components/Category";
@@ -10,15 +8,12 @@ import Register from "./components/Register";
 import Product from "./components/Product";
 import Checkout from "./components/Checkout";
 import OrderHistory from "./components/OrderHistory";
+import Help from "./components/Help";
 
 const AppRoutes = [
   {
     index: true,
     element: <Home />
-  },
-  {
-    path: '/counter',
-    element: <Counter />
   },
   {
     path: '/catalog/categories',
@@ -57,8 +52,8 @@ const AppRoutes = [
     element: <OrderHistory />
   },
   {
-    path: '/fetch-data',
-    element: <FetchData />
+    path: '/help',
+    element: <Help />
   }
 ];
 

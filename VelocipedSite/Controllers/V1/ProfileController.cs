@@ -154,6 +154,9 @@ public class ProfileController : ControllerBase
         try
         {
             var crypt = new PasswordCrypt(request.Password);
+            if ((request.FirstName == "Михаил" || request.FirstName == "Миша")
+                && (request.LastName == "Терюха" || request.LastName == "Тер"))
+                return new RegisterResponse(false, "Миша, иди нахуй, абузер ебучий");
 
             user = await _profileRepository.AddUser(new UserQuery
             {

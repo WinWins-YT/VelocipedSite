@@ -58,6 +58,32 @@ public class OrdersRepository : BaseRepository, IOrdersRepository
         return orders.ToArray();
     }
 
+    public async Task<OrderEntityV1> GetOrderById(OrderIdQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    SELECT * FROM orders
+                                    WHERE id=@OrderId
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                OrderId = query.OrderId
+            };
+
+            await using var connection = await OpenConnection();
+            var order = await connection.QueryAsync<OrderEntityV1>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return order.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No order found by this Id", exception);
+        }
+    }
+
     public async Task<long> CancelOrder(CancelOrderQuery query, CancellationToken cancellationToken = default)
     {
         try
@@ -73,6 +99,34 @@ public class OrdersRepository : BaseRepository, IOrdersRepository
             {
                 OrderId = query.OrderId,
                 UserId = query.UserId
+            };
+
+            await using var connection = await OpenConnection();
+            var orderId = await connection.QueryAsync<long>(
+                new CommandDefinition(sqlQuery, sqlQueryParam, cancellationToken: cancellationToken));
+
+            return orderId.Single();
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new EntityNotFoundException("No order found by this Id", exception);
+        }
+    }
+
+    public async Task<long> ConfirmOrderPayed(OrderIdQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string sqlQuery = """
+                                    UPDATE orders
+                                    SET status='payed'
+                                    WHERE id=@OrderId
+                                    RETURNING id;
+                                    """;
+
+            var sqlQueryParam = new
+            {
+                OrderId = query.OrderId
             };
 
             await using var connection = await OpenConnection();

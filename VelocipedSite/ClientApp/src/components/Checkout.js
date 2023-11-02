@@ -94,6 +94,10 @@ export default function Checkout() {
             return data;
         })));
     }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
     
     async function pay()  {
         payBtn.current.disabled = true;
@@ -121,7 +125,10 @@ export default function Checkout() {
             return;
         }
         
+        localStorage.setItem("cart", "[]");
+        
         setOrderId(data.orderId);
+        await sleep(500);
         setFormSubmit(true);
     }
     
@@ -155,8 +162,10 @@ export default function Checkout() {
     
     function form() {
         console.log(orderId);
+        sendForm.current.elements["label"].value = orderId;
         sendForm.current.submit();
     }
+    
     
     let sum = parseFloat(cart.reduce((partialSum, a) => partialSum + ((a.isOnSale ? a.salePrice : a.price) * a.quantity), 0) + shop.deliveryPrice - promoValue);
     

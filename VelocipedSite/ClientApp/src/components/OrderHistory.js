@@ -49,7 +49,7 @@ export default function OrderHistory() {
     }
     
     async function cancelOrder(id) {
-        const response = await fetch("/api/v1/Orders/CancelOrder", {
+        await fetch("/api/v1/Orders/CancelOrder", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
