@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VelocipedSite.DAL.Entities;
+using VelocipedSite.DAL.Enums;
 using VelocipedSite.DAL.Exceptions;
 using VelocipedSite.DAL.Models;
 using VelocipedSite.DAL.Repositories.Interfaces;
 using VelocipedSite.Models;
 using VelocipedSite.Requests.V1.Orders;
 using VelocipedSite.Responses.V1.Orders;
+using VelocipedSite.Utilities;
 
 namespace VelocipedSite.Controllers.V1;
 
@@ -58,6 +60,11 @@ public class OrdersController : ControllerBase
                 SaleValue = request.SaleValue
             });
 
+            await Mail.SendOrderCreatedEmail(user.Email,
+                new Order(orderId, OrderStatus.Created, DateTime.Now, request.Address, request.Address,
+                    products.Select(x => new Product(x.Id, x.CategoryId, x.ShopId, x.Name, x.Description, x.PathToImg,
+                        x.Price, x.IsOnSale, x.SalePrice)).ToArray(), request.TotalPrice, request.SaleValue));
+            
             _logger.LogInformation("Order for user {Token} created successfully, OrderId: {OrderId}", request.Token, orderId);
             return new CreateOrderResponse(orderId);
         }

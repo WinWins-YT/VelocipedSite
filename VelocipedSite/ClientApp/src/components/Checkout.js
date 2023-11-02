@@ -183,7 +183,7 @@ export default function Checkout() {
                         <input type="hidden" name="label" value={orderId}/>
                         <input type="hidden" name="quickpay-form" value="button"/>
                         <input type="hidden" name="sum" value={sum.toFixed(2)} datatype="number"/>
-                        <input type="hidden" name="paymentType" value="AC"/>
+                        <input type="hidden" name="paymentType" value="PC"/>
                         <Form.Group className="mb-3" controlId="userForm.addressControl">
                             <Form.Label>Адрес</Form.Label>
                             <Form.Control value={address}

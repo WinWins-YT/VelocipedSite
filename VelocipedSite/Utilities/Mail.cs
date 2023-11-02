@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using VelocipedSite.Models;
 
 namespace VelocipedSite.Utilities;
 
@@ -29,7 +30,7 @@ public static class Mail
     {
         var mailBody = $"""
                         <h3>Добро пожаловать в Велосипед!</h3>
-                        <p>Вы успешно зарегистрировались на нашем сайте. Чтобы закончить регистрацию, необходимо подтвердить адрес электронной почты, перейдя по этой <a href="https://localhost:44468/api/v1/profile/activation/{token}">ссылке</a></p>
+                        <p>Вы успешно зарегистрировались на нашем сайте. Чтобы закончить регистрацию, необходимо подтвердить адрес электронной почты, перейдя по этой <a href="https://velociped.ru/api/v1/profile/activation/{token}">ссылке</a></p>
                         <p>Хорошего вам дня!</p>
                         """;
 
@@ -46,5 +47,21 @@ public static class Mail
                         """;
 
         await SendMessage(email, "Сброс пароля", mailBody);
+    }
+
+    public static async Task SendOrderCreatedEmail(string email, Order order)
+    {
+        var mailBody = $"""
+                        <h3>Ваш заказ №{order.Id} от {order.Date:f}</h3>
+                        <p>Скидка: {order.SaleValue:F2} руб.</p>
+                        <b>Итого с учетом скидки: {order.TotalPrice:F2} руб.</b>
+                        <p>Ваши товары:</p>
+                       """;
+
+        mailBody = order.Products.Select(x => $"<p>{x.Name} - {x.Price:F2} руб.</p>").Aggregate(mailBody, (current, line) => current + (line + "\n"));
+
+        mailBody += "<p>Спасибо за заказ!</p>";
+
+        await SendMessage(email, "Заказ создан", mailBody);
     }
 }
